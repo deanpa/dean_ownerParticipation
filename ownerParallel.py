@@ -142,7 +142,7 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.species = 'Rats'
+        self.species = 'Possums'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
         self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
@@ -218,7 +218,7 @@ class Simulation(object):
         self.centre = np.array([self.extentSide / 2, self.extentSide / 2])
         self.propRadius = np.arange(self.hrRadius * self.params.propHrMultiplier[0],
             self.hrRadius * self.params.propHrMultiplier[1], 
-            self.params.trapLayout[self.params.species]['trapDist'] * .75)
+            self.params.trapLayout[self.params.species]['trapDist'] * .5)
         self.propRadius = np.append(0, self.propRadius)
  
 #            self.params.bufferLayout[self.params.species]['trapDist'] * 1.0)
