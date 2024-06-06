@@ -35,7 +35,7 @@ class Params(object):
             baseDir = '/home/dean/workfolder/projects/dean_predatorfree/DataResults/Results/'
         else:
             ## IF ON NESI, ADD THE PredatorFree BASE DIRECTORY
-            baseDir = os.path.join(baseDir, 'PredatorFree', 'DataResults', 'Results') 
+            baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
         ## GET USER
         userName = getpass.getuser()
         resultsPath = os.path.join(userName, 'OwnerParticipation')
