@@ -14,7 +14,7 @@ import resource
 class ProcessResults(object):
     def __init__(self, params):
         self.params = params
-        self.iter = 20
+        self.iter = 200
         ####################
         ## RUN FUNCTIONS
         self.iterWrapper()
