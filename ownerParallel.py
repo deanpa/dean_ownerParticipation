@@ -142,16 +142,15 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.species = 'Stoats'
-#        self.r = {'Rats' : 3.0, 'Possums' : np.log(.75), 'Stoats' : np.log(3.0)}
-        self.k = {'Rats' : 4.0, 'Possums' : 8.0, 'Stoats' : 3.5}
+        self.species = 'Rats'
+        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
         self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
-        self.startDensity = {'Rats' : 3, 'Possums' : 7, 'Stoats' : 3}
+        self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 2}
         self.propHrMultiplier = [.5, 6.18]    # 2.0]
         self.extentHRMultiplier = 10
-        self.dispersalSD = {'Rats' : 80, 'Possums' : 150, 'Stoats' : 500}
+        self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
                             'Possums' : {'transectDist' : 100, 'trapDist' : 50},
                             'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
@@ -159,12 +158,12 @@ class Params(object):
                             'Possums' : {'transectDist' : 75, 'trapDist' : 25},
                             'Stoats' : {'transectDist' : 750, 'trapDist' : 100}}
         self.bufferHRProp = 2.0
-        self.adultSurv = {'Rats' : np.exp(-0.5), 'Possums' :  np.exp(-0.3), 
+        self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
             'Stoats' : np.exp(-0.5)}
-        self.adultSurvDecay = {'Rats' : 2.6, 'Possums' : 2.0, 'Stoats' : 1.6}
-        self.perCapRecruit = {'Rats' : 3.0, 'Possums' : 0.75, 'Stoats' : 3.5}
-        self.recruitDecay = {'Rats' : 1.75, 'Possums' : 1.5, 'Stoats' : 1.4}
-        self.distanceDD = {'Rats' : 1, 'Possums' : 2, 'Stoats' : 1}
+        self.adultSurvDecay = {'Rats' : 2.8, 'Possums' : 3.0, 'Stoats' : 2.5}
+        self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5}
+        self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5}
+        self.distanceDD = {'Rats' : 1.5, 'Possums' : 1.5, 'Stoats' : 1.5}
 
         ## COST PARAMETERS
         self.costPerTrap = {'Rats' : 5.0, 'Possums' : 25.0, 'Stoats' : 25.0}
