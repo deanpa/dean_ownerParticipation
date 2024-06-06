@@ -14,18 +14,17 @@ import resource
 class ProcessResults(object):
     def __init__(self, params):
         self.params = params
-        self.iter = 200
+        self.iter = 20
         ####################
         ## RUN FUNCTIONS
         self.iterWrapper()
-#        self.readJSON()
-        self.plotCentralDensity()
-        self.plotNStorage()
-        self.plotPEradication()
-        self.plotCosts()
-        self.plotDensityCost()
-        self.plotDensityTrapArea()
-        self.plotPEradCost()
+#        self.plotCentralDensity()
+#        self.plotNStorage()
+#        self.plotPEradication()
+#        self.plotCosts()
+#        self.plotDensityCost()
+#        self.plotDensityTrapArea()
+#        self.plotPEradCost()
 
     def iterWrapper(self):
         self.years = np.arange(self.params.nYears)
