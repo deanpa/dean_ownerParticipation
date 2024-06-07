@@ -23,7 +23,7 @@ class ProcessResults(object):
         self.plotPEradication()
         self.plotCosts()
         self.plotDensityCost()
-#        self.plotDensityTrapArea()
+        self.plotDensityTrapArea()
 #        self.plotPEradCost()
 
     def iterWrapper(self):
@@ -210,7 +210,7 @@ class ProcessResults(object):
             P.plot(self.propertyHR_Ratio[spp], self.costs[spp], label = spp, linewidth=3)
     
         P.xlabel('Ratio of property area to HR area', fontsize = 16)
-        P.ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 16)
+        P.ylabel('Annual trapping costs (\$$ ha^{-1}$)', fontsize = 16)
         P.legend(loc = 'upper right')
         fname = 'trappingCosts_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
@@ -222,7 +222,7 @@ class ProcessResults(object):
         for spp in self.allSpp:
             P.plot(self.propCircumference[spp], self.costDenseTrapping[spp], label = spp, linewidth=3)
         P.xlabel('Property circumference (m)', fontsize = 16)
-        P.ylabel('Total trapping costs in buffer area ($)', fontsize = 16)
+        P.ylabel('Annual trapping costs in buffer area ($)', fontsize = 16)
         P.legend(loc = 'upper left')
         fname = 'trapCosts_Perimeter_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
@@ -244,7 +244,6 @@ class ProcessResults(object):
                 self.nQuants[spp][:, 1], alpha = 0.2, color = 'b')
             ax2 = ax1.twinx()
             ax2.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
-
             ax1.set_xlabel('Ratio of property area to HR area', fontsize = 14)
             if cc == 1:
                 ax1.set_ylabel('Density ($km^{2}$)', fontsize = 14)
@@ -254,9 +253,8 @@ class ProcessResults(object):
             ax1.tick_params(axis='y', colors="blue")
             ax1.yaxis.label.set_color("blue")
             ax1.legend(loc = 'upper right')
-
             if cc == 3:
-                ax2.set_ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 14)
+                ax2.set_ylabel('Annual trapping costs (\$$ ha^{-1}$)', fontsize = 14)
             else:
                 ax2.set_ylabel('')
             cc += 1
@@ -266,24 +264,33 @@ class ProcessResults(object):
         P.savefig(pathFName, format='png', dpi = 300)
         P.show()
 
-
-
     def plotDensityTrapArea(self):
         ## PLOT PROPERTY AREA TO HR AREA RATIO
-        P.figure(figsize=(8,8))
-        ax1 = P.gca()
-        ax1.plot(self.propertyHR_Ratio, self.meanNTrapArea, color='b', linewidth=3)
-        ax1.fill_between(self.propertyHR_Ratio, self.quantsNTrapArea[:,0], 
-            self.quantsNTrapArea[:, 1], alpha = 0.2, color = 'b', lw = 0)
-        ax2 = ax1.twinx()
-        ax2.plot(self.propertyHR_Ratio, self.costs, color='k', linewidth=3)
-        ax1.set_xlabel('Ratio of property area to HR area', fontsize = 16)
-        ax1.set_ylabel('Density in trapped area ' + '($km^{2}$)', fontsize = 16)
-        ax1.spines["right"].set_edgecolor("blue")
-        ax1.tick_params(axis='y', colors="blue")
-        ax1.yaxis.label.set_color("blue")
-        ax2.set_ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 16)
-        fname = 'denTrapArea_Cost_{}.png'.format(self.params.species)
+        P.figure(figsize=(18,6))
+        cc = 1
+        for spp in self.allSpp:
+            P.subplot(1,3, cc)
+            ax1 = P.gca()
+            ax1.plot(self.propertyHR_Ratio[spp], self.meanNTrapArea[spp], color='b', 
+                label = 'Density of ' + spp, linewidth=3)
+            ax1.fill_between(self.propertyHR_Ratio[spp], self.quantsNTrapArea[spp][:,0], 
+                self.quantsNTrapArea[spp][:, 1], alpha = 0.2, color = 'b')
+            ax2 = ax1.twinx()
+            ax2.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
+            ax1.set_xlabel('Ratio of property area to HR area', fontsize = 14)
+            if cc == 1:
+                ax1.set_ylabel('Density in trapped area ($km^{2}$)', fontsize = 14)
+            else:
+                ax1.set_ylabel('')
+            ax1.spines["right"].set_edgecolor("blue")
+            ax1.tick_params(axis='y', colors="blue")
+            ax1.yaxis.label.set_color("blue")
+            if cc == 3:
+                ax2.set_ylabel('Annual trapping costs (\$$ ha^{-1}$)', fontsize = 14)
+            else:
+                ax2.set_ylabel('')
+            cc += 1
+        fname = 'denTrapArea_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
         P.show()
