@@ -142,7 +142,7 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.species = 'Possums'
+        self.species = 'Stoats'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
         self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
