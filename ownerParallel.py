@@ -40,7 +40,7 @@ def foo2(l,h,n):
 def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, extentSide,
         sigma, g0, nYears, trapX, trapY, trapNights, pTrapFail, pNeoPhobic,
         adultSurv, adultSurvDecay, perCapRecruit, recruitDecay, dispersalSD, 
-        kDistanceDD, centre, DDRadius, DDArea, eradEventSum, centralDensity, propRadius):
+        kSpp, centre, DDRadius, DDArea, eradEventSum, centralDensity, propRadius):
     N = np.random.poisson(startDensity * areaHa)
     X = list(np.random.uniform(0, extentSide, N))
     Y = list(np.random.uniform(0, extentSide, N))
@@ -75,9 +75,11 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
                 ## GET LOCAL DD
             distDD = distFX(X[indx], Y[indx], np.array(X), np.array(Y))
-            nDD = np.sum(distDD < DDRadius)
-            pSurv = adultSurv * (np.exp(-nDD**2 / kDistanceDD**adultSurvDecay))
-            pMaxRec = np.exp(-nDD**2 / kDistanceDD**recruitDecay)
+            nDD = np.sum(distDD < DDRadius) / DDArea
+            pSurv = adultSurv * (np.exp(-nDD**2 / kSpp**adultSurvDecay))
+#            pSurv = adultSurv * (np.exp(-nDD**2 / kDistanceDD**adultSurvDecay))
+            pMaxRec = np.exp(-nDD**2 / kSPP**recruitDecay)
+#            pMaxRec = np.exp(-nDD**2 / kDistanceDD**recruitDecay)
             recRate = perCapRecruit * pMaxRec
 
             surv_ind = np.random.binomial(1, pSurv)
@@ -142,7 +144,7 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.species = 'Possums'
+        self.species = 'Rats'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
         self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
@@ -347,7 +349,7 @@ class Simulation(object):
                 self.params.perCapRecruit[self.params.species], 
                 self.params.recruitDecay[self.params.species], 
                 self.params.dispersalSD[self.params.species],
-                self.kDistanceDD, self.centre, self.DDRadius, self.DDArea,
+                self.params.k[self.params.species], self.centre, self.DDRadius, self.DDArea,
                 self.eradEventSum, self.centralDensity, self.propRadius)
 
         ## DEBUGGING
