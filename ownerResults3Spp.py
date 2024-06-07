@@ -238,7 +238,8 @@ class ProcessResults(object):
         for spp in self.allSpp:
             P.subplot(1,3, cc)
             ax1 = P.gca()
-            ax1.plot(self.propertyHR_Ratio[spp], self.meanN[spp], color='b', linewidth=3)
+            ax1.plot(self.propertyHR_Ratio[spp], self.meanN[spp], color='b', 
+                label = 'Density of ' + spp, linewidth=3)
             ax1.fill_between(self.propertyHR_Ratio[spp], self.nQuants[spp][:, 0], 
                 self.nQuants[spp][:, 1], alpha = 0.2, color = 'b')
             ax2 = ax1.twinx()
@@ -246,12 +247,13 @@ class ProcessResults(object):
 
             ax1.set_xlabel('Ratio of property area to HR area', fontsize = 14)
             if cc == 1:
-                ax1.set_ylabel('Density of ' + spp + ' ($km^{2}$)', fontsize = 14)
+                ax1.set_ylabel('Density ($km^{2}$)', fontsize = 14)
             else:
                 ax1.set_ylabel('')
             ax1.spines["right"].set_edgecolor("blue")
             ax1.tick_params(axis='y', colors="blue")
             ax1.yaxis.label.set_color("blue")
+            ax1.legend(loc = 'upper right')
 
             if cc == 3:
                 ax2.set_ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 14)

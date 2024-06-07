@@ -154,7 +154,7 @@ class Params(object):
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
-                            'Possums' : {'transectDist' : 200, 'trapDist' : 100},
+                            'Possums' : {'transectDist' : 150, 'trapDist' : 75},
                             'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
                             'Possums' : {'transectDist' : 75, 'trapDist' : 25},
@@ -168,8 +168,8 @@ class Params(object):
         self.distanceDD = {'Rats' : 1.5, 'Possums' : 1.5, 'Stoats' : 1.5}
 
         ## COST PARAMETERS
-        self.costPerTrap = {'Rats' : 5.0, 'Possums' : 25.0, 'Stoats' : 25.0}
-        self.nCheckedPerDay = {'Rats' : 100.0, 'Possums' : 40.0, 'Stoats' : 50.0}
+        self.costPerTrap = {'Rats' : 5.0, 'Possums' : 10.0, 'Stoats' : 25.0}
+        self.nCheckedPerDay = {'Rats' : 100.0, 'Possums' : 75.0, 'Stoats' : 50.0}
         self.dayRate = 400.0
         self.nRecheckPerYear = {'Rats' : 3.0, 'Possums' : 6.0, 'Stoats' : 3.0}
         self.trapNightsPerSet = {'Rats' : 10.0, 'Possums' : 1.0, 'Stoats' : 9.0}
