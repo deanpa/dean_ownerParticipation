@@ -28,28 +28,44 @@ class ProcessResults(object):
 
     def iterWrapper(self):
         self.years = np.arange(self.params.nYears)
-        self.hrRadius = int(self.params.sigma[self.params.species] * 3)
-        self.hrDiameter = self.hrRadius * 2
-        self.extentSide = self.hrDiameter * self.params.extentHRMultiplier
-        self.areaHa = self.extentSide**2 / 10000
-        self.centralDensity = np.zeros((self.iter, self.params.nYears))
-        for i in range(self.iter):
-            fName = 'ownerResults_{}_Job_{}.json'.format(self.params.species, i)
-            self.simResultsPath = os.path.join(self.params.outputDataPath, fName)
-            self.readJSON(i)
+        self.allSpp = ['Rats', 'Possums', 'Stoats']
+        self.nSpp = len(self.allSpp)
+        self.hrRadius = {}
+        self.hrDiameter = {}
+        self.extentSide = {}
+        self.areaHa = {}
+        self.centralDensity = {}
+        self.meanN = {}
+        self.nQuants = {}
+        self.pErad = {}
+        self.areaOutsideProp = {}
+        densityTrapArea = {}
+        self.meanNTrapArea = {}
+        self.quantsNTrapArea = {}
 
-            print('fName', fName)
+        for spp in self.allSpp:
+            self.hrRadius[spp] = int(self.params.sigma[self.params.species] * 3)
+            self.hrDiameter[spp] = self.hrRadius * 2
+            self.extentSide[spp] = self.hrDiameter * self.params.extentHRMultiplier
+            self.areaHa[spp] = self.extentSide**2 / 10000
+            self.centralDensity[spp] = np.zeros((self.iter, self.params.nYears))
+            for i in range(self.iter):
+                fName = 'ownerResults_{}_Job_{}.json'.format(spp, i)
+                self.simResultsPath = os.path.join(self.params.outputDataPath, fName)
+                self.readJSON(i, spp)
+    
+                print('fName', fName)
 
-        self.meanN = np.mean(self.nStorage, axis = 1)
-        self.nQuants = mquantiles(self.nStorage, axis = 1, prob = [0.025, 0.975])
+            self.meanN[spp] = np.mean(self.nStorage, axis = 1)
+            self.nQuants[spp] = mquantiles(self.nStorage, axis = 1, prob = [0.025, 0.975])
+    
+            self.pErad[spp] = np.sum(self.eradEventSum, axis = 1) / self.iter
 
-        self.pErad = np.sum(self.eradEventSum, axis = 1) / self.iter
-
-        ## N PREDS IN TRAPPING AREA AT END OF OPERATION
-        self.areaOutsideProp = self.areaHa - self.propArea
-        densityTrapArea = self.nTrappingArea / self.areaOutsideProp[:, np.newaxis] * 100
-        self.meanNTrapArea = np.mean(densityTrapArea, axis = 1)
-        self.quantsNTrapArea = mquantiles(densityTrapArea, axis = 1, prob = [0.025, 0.975])
+            ## N PREDS IN TRAPPING AREA AT END OF OPERATION
+            self.areaOutsideProp[spp] = self.areaHa - self.propArea
+            densityTrapArea[spp] = self.nTrappingArea / self.areaOutsideProp[:, np.newaxis] * 100
+            self.meanNTrapArea[spp] = np.mean(densityTrapArea, axis = 1)
+            self.quantsNTrapArea[spp] = mquantiles(densityTrapArea, axis = 1, prob = [0.025, 0.975])
 
 
     def readJSON(self, i):
