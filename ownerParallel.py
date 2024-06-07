@@ -146,7 +146,7 @@ class Params(object):
     def __init__(self):
         self.species = 'Possums'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
-        self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
+        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
         self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 2}
