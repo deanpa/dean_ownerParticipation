@@ -146,19 +146,19 @@ class Params(object):
     def __init__(self):
         self.species = 'Possums'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
-        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
+        self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
-        self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 2}
+        self.startDensity = {'Rats' : 4, 'Possums' : 5, 'Stoats' : 2}
         self.propHrMultiplier = [.5, 6.18]    # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
                             'Possums' : {'transectDist' : 150, 'trapDist' : 75},
-                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
+                            'Stoats' : {'transectDist' : 750, 'trapDist' : 150}}
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
-                            'Possums' : {'transectDist' : 75, 'trapDist' : 25},
-                            'Stoats' : {'transectDist' : 750, 'trapDist' : 100}}
+                            'Possums' : {'transectDist' : 75, 'trapDist' : 50},
+                            'Stoats' : {'transectDist' : 500, 'trapDist' : 100}}
         self.bufferHRProp = 2.0
         self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
             'Stoats' : np.exp(-0.5)}
@@ -168,14 +168,14 @@ class Params(object):
         self.distanceDD = {'Rats' : 1.5, 'Possums' : 1.5, 'Stoats' : 1.5}
 
         ## COST PARAMETERS
-        self.costPerTrap = {'Rats' : 5.0, 'Possums' : 10.0, 'Stoats' : 25.0}
-        self.nCheckedPerDay = {'Rats' : 100.0, 'Possums' : 75.0, 'Stoats' : 50.0}
+        self.costPerTrap = {'Rats' : 5.0, 'Possums' : 5.0, 'Stoats' : 25.0}
+        self.nCheckedPerDay = {'Rats' : 100.0, 'Possums' : 100.0, 'Stoats' : 50.0}
         self.dayRate = 400.0
-        self.nRecheckPerYear = {'Rats' : 3.0, 'Possums' : 6.0, 'Stoats' : 3.0}
+        self.nRecheckPerYear = {'Rats' : 3.0, 'Possums' : 4.0, 'Stoats' : 3.0}
         self.trapNightsPerSet = {'Rats' : 10.0, 'Possums' : 1.0, 'Stoats' : 9.0}
 
         self.iter = 1
-        self.nYears = 4
+        self.nYears = 6
         self.pTrapFail = 0.02
         self.pNeoPhobic = 0.03
 
