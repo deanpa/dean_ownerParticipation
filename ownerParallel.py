@@ -154,7 +154,7 @@ class Params(object):
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
-                            'Possums' : {'transectDist' : 100, 'trapDist' : 50},
+                            'Possums' : {'transectDist' : 200, 'trapDist' : 100},
                             'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
                             'Possums' : {'transectDist' : 75, 'trapDist' : 25},
