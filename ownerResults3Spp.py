@@ -18,6 +18,7 @@ class ProcessResults(object):
         ####################
         ## RUN FUNCTIONS
         self.iterWrapper()
+        self.summaryPCapture()
         self.plotCentralDensity()
         self.plotNStorage()
         self.plotPEradication()
@@ -79,6 +80,7 @@ class ProcessResults(object):
             self.propertyHR_Ratio[spp] = self.propArea[spp] / self.hrAreaHa[spp]
             self.costs[spp] = np.array(self.simResultsLists['cost']) / self.areaHa[spp]
             self.costDenseTrapping[spp] = np.array(self.simResultsLists['costDenseTrap'])
+            self.pCapture[spp] = np.array(self.simResultsLists['pCapture'])
 
             self.nStorage[spp] = np.expand_dims(np.array(self.simResultsLists['nStorage']) / 
                 self.areaHa[spp] *100, 1)
@@ -86,6 +88,7 @@ class ProcessResults(object):
                 self.simResultsLists['eradEventSum']), 1)
             self.nTrappingArea[spp] = np.expand_dims(np.array(
                 self.simResultsLists['nTrappingArea']), 1)
+
         ## STACK ITERATIONS
         else:
             nStorage_i = np.array(self.simResultsLists['nStorage']) / self.areaHa[spp] *100
@@ -124,7 +127,13 @@ class ProcessResults(object):
         self.nStorage = {} 
         self.eradEventSum = {}
         self.nTrappingArea = {}
+        self.pCapture = {}
 
+    def summaryPCapture(self):
+        for spp in self.allSpp:
+            meanPCapt = np.mean(self.pCapture[spp])
+            quantsPCapt = mquantiles(self.pCapture[spp], prob=[0.05, 0.95])
+            print('Species:', spp, 'Mean PCapt', meanPCapt, 'LCL and UCL', quantsPCapt)
 
 
     def plotCentralDensity(self):
@@ -285,11 +294,13 @@ class ProcessResults(object):
             ax1.spines["right"].set_edgecolor("blue")
             ax1.tick_params(axis='y', colors="blue")
             ax1.yaxis.label.set_color("blue")
+            ax1.legend(loc = 'upper right')
             if cc == 3:
                 ax2.set_ylabel('Annual trapping costs (\$$ ha^{-1}$)', fontsize = 14)
             else:
                 ax2.set_ylabel('')
             cc += 1
+        P.tight_layout()
         fname = 'denTrapArea_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
