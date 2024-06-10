@@ -40,7 +40,7 @@ def foo2(l,h,n):
 def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, extentSide,
         sigma, g0, nYears, trapX, trapY, trapNights, pTrapFail, pNeoPhobic,
         adultSurv, adultSurvDecay, perCapRecruit, recruitDecay, dispersalSD, 
-        kSpp, centre, DDRadius, DDArea, eradEventSum, centralDensity, propRadius):
+        kSpp, centre, DDRadius, DDArea, eradEventSum, centralDensity, propRadius, pCapture):
     N = np.random.poisson(startDensity * areaHa)
     X = list(np.random.uniform(0, extentSide, N))
     Y = list(np.random.uniform(0, extentSide, N))
@@ -58,6 +58,10 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
             pNoTrap = 1 - (pCapt * (1.0 - pTrapFail))
             pNoTrap = pNoTrap**trapNights
             pCaptAll = 1.0 - (np.prod(pNoTrap) * (1.0 - pNeoPhobic))
+
+            if prop == 0 & yr == 0:
+                pCapture[ind] = pCaptAll
+
             capt_ind = np.random.binomial(1, pCaptAll)
             if capt_ind == 1:
                 del(X[indx])
@@ -144,21 +148,21 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.species = 'Possums'
+        self.species = 'Stoats'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
         self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
-        self.startDensity = {'Rats' : 4, 'Possums' : 5, 'Stoats' : 2}
+        self.startDensity = {'Rats' : 4, 'Possums' : 5, 'Stoats' : 0.03}
         self.propHrMultiplier = [.5, 6.18]    # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
                             'Possums' : {'transectDist' : 150, 'trapDist' : 75},
-                            'Stoats' : {'transectDist' : 750, 'trapDist' : 150}}
+                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 150}}
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
                             'Possums' : {'transectDist' : 75, 'trapDist' : 50},
-                            'Stoats' : {'transectDist' : 500, 'trapDist' : 100}}
+                            'Stoats' : {'transectDist' : 750, 'trapDist' : 100}}
         self.bufferHRProp = 2.0
         self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
             'Stoats' : np.exp(-0.5)}
@@ -292,6 +296,7 @@ class Simulation(object):
         self.eradEventSum = np.zeros(self.nProperties)
         self.centralDensity = np.zeros((self.nProperties, self.params.nYears))
         self.nTrapsStorage = []     #np.zeros(self.nProperties)
+        self.pCapture = np.zeros(int(self.params.startDensity[self.params.species] * self.areaHa * 2))
 
     def plotCentralDensity(self):
         P.figure(figsize=(9,11))
@@ -350,7 +355,7 @@ class Simulation(object):
                 self.params.recruitDecay[self.params.species], 
                 self.params.dispersalSD[self.params.species],
                 self.params.k[self.params.species], self.centre, self.DDRadius, self.DDArea,
-                self.eradEventSum, self.centralDensity, self.propRadius)
+                self.eradEventSum, self.centralDensity, self.propRadius, self.pCapture)
 
         ## DEBUGGING
         trapMinBufMask = self.distCentreTrap >= self.propRadius[prop]
@@ -453,6 +458,7 @@ class Simulation(object):
         simResults['eradEventSum'] = self.eradEventSum.tolist()
         simResults['cost'] = self.costStorage.tolist()
         simResults['costDenseTrap'] = self.costDenseTrapping.tolist()
+        simResults['pCapture'] = self.pCapture.tolist()
         ## WRITE RESULTS TO JSON
         with open(self.params.simResultsPath, 'w') as f:
             json.dump(simResults, f)
