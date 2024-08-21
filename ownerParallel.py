@@ -157,11 +157,11 @@ class Params(object):
         self.propHrMultiplier = [.5, 6.18]    # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
-        self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
-                            'Possums' : {'transectDist' : 150, 'trapDist' : 75},
-                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 150}}
+        self.trapLayout = {'Rats' : {'transectDist' : 200, 'trapDist' : 50}, 
+                            'Possums' : {'transectDist' : 200, 'trapDist' : 50},
+                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
-                            'Possums' : {'transectDist' : 75, 'trapDist' : 50},
+                            'Possums' : {'transectDist' : 75, 'trapDist' : 25},
                             'Stoats' : {'transectDist' : 750, 'trapDist' : 100}}
         self.bufferHRProp = 2.0
         self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
@@ -179,9 +179,12 @@ class Params(object):
         self.trapNightsPerSet = {'Rats' : 10.0, 'Possums' : 1.0, 'Stoats' : 9.0}
 
         self.iter = 1
-        self.nYears = 6
+        self.nYears = 4
         self.pTrapFail = 0.02
         self.pNeoPhobic = 0.03
+
+        ## DENSITY PER KM SQUARED RESULTING IN 5% TRACKING RATE
+        self.trRate5 = {'Rats' : 33.0, 'Possums' : 3.3, 'Stoats' : 1.2}
 
         baseDir = os.getenv('BROADSCALEDIR', default='.')
         if baseDir == '.':

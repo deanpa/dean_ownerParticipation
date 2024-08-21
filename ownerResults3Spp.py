@@ -332,7 +332,6 @@ class ProcessResults(object):
 ########            Main function
 #######
 def main():
-    #foo2(2,12,10)
 
     params = ownerParallel.Params()
     processresults = ProcessResults(params)

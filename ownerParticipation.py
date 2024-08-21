@@ -152,8 +152,8 @@ class Params(object):
         self.propHrMultiplier = [.5, 7.57]     # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 80, 'Possums' : 150, 'Stoats' : 500}
-        self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
-                            'Possums' : {'transectDist' : 100, 'trapDist' : 50},
+        self.trapLayout = {'Rats' : {'transectDist' : 200, 'trapDist' : 50}, 
+                            'Possums' : {'transectDist' : 200, 'trapDist' : 50},
                             'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
                             'Possums' : {'transectDist' : 75, 'trapDist' : 25},
@@ -177,6 +177,9 @@ class Params(object):
         self.nYears = 2
         self.pTrapFail = 0.02
         self.pNeoPhobic = 0.03
+
+        ## DENSITY PER KM SQUARED RESULTING IN 5% TRACKING RATE
+        self.trRate5 = {'Rats' : 33.0, 'Possums' : 3.3, 'Stoats' : 1.2}
 
         print('Species', self.species, 'Iterations', self.iter, 'Years', self.nYears)
 
