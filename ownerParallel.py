@@ -150,19 +150,29 @@ class Params(object):
     def __init__(self):
         self.species = 'Stoats'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
-        self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
+        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
         self.startDensity = {'Rats' : 4, 'Possums' : 5, 'Stoats' : 0.03}
-        self.propHrMultiplier = [.5, 6.18]    # 2.0]
+        self.propHrMultiplier = [.5, 4.0]    # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
-        self.trapLayout = {'Rats' : {'transectDist' : 200, 'trapDist' : 50}, 
+
+        ## CABP DOC RECOMMENDATIONS
+        self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
                             'Possums' : {'transectDist' : 200, 'trapDist' : 50},
-                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
+                            'Stoats' : {'transectDist' : 800, 'trapDist' : 200}}
+
+#        self.trapLayout = {'Rats' : {'transectDist' : 200, 'trapDist' : 50}, 
+#                            'Possums' : {'transectDist' : 200, 'trapDist' : 50},
+#                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
+
+
+
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
-                            'Possums' : {'transectDist' : 75, 'trapDist' : 25},
-                            'Stoats' : {'transectDist' : 750, 'trapDist' : 100}}
+                            'Possums' : {'transectDist' : 100, 'trapDist' : 25},
+                            'Stoats' : {'transectDist' : 750, 'trapDist' : 100}} 
+
         self.bufferHRProp = 2.0
         self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
             'Stoats' : np.exp(-0.5)}
@@ -184,7 +194,7 @@ class Params(object):
         self.pNeoPhobic = 0.03
 
         ## DENSITY PER KM SQUARED RESULTING IN 5% TRACKING RATE
-        self.trRate5 = {'Rats' : 33.0, 'Possums' : 3.3, 'Stoats' : 1.2}
+        self.trRate5 = {'Rats' : 33.0, 'Possums' : 4.0, 'Stoats' : 1.2}
 
         baseDir = os.getenv('BROADSCALEDIR', default='.')
         if baseDir == '.':

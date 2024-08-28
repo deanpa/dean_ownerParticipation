@@ -10,6 +10,7 @@ from numba import njit
 from scipy.stats.mstats import mquantiles
 import json
 import csv
+import resource
 
 @njit
 def distFX(x1, y1, x2, y2):
@@ -142,22 +143,32 @@ def loopIterations(iter, prop, nProperties, startDensity, areaHa, nStorage, nTra
 
 class Params(object):
     def __init__(self):
-        self.species = 'Stoats'
+        self.species = 'Possums'       #'Stoats'
 #        self.r = {'Rats' : 3.0, 'Possums' : np.log(.75), 'Stoats' : np.log(3.0)}
         self.k = {'Rats' : 4.0, 'Possums' : 8.0, 'Stoats' : 3.5}
-        self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
+        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
         self.startDensity = {'Rats' : 3, 'Possums' : 7, 'Stoats' : 3}
-        self.propHrMultiplier = [.5, 7.57]     # 2.0]
+        self.propHrMultiplier = [0.5, 4.0]     # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 80, 'Possums' : 150, 'Stoats' : 500}
-        self.trapLayout = {'Rats' : {'transectDist' : 200, 'trapDist' : 50}, 
+        ## CABP DOC RECOMMENDATIONS
+        self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
                             'Possums' : {'transectDist' : 200, 'trapDist' : 50},
-                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
+                            'Stoats' : {'transectDist' : 800, 'trapDist' : 200}}
+
+#        self.trapLayout = {'Rats' : {'transectDist' : 200, 'trapDist' : 50}, 
+#                            'Possums' : {'transectDist' : 200, 'trapDist' : 50},
+#                            'Stoats' : {'transectDist' : 1000, 'trapDist' : 200}}
+
+
+
         self.bufferLayout = {'Rats' : {'transectDist' : 75, 'trapDist' : 25}, 
-                            'Possums' : {'transectDist' : 75, 'trapDist' : 25},
-                            'Stoats' : {'transectDist' : 750, 'trapDist' : 100}}
+                            'Possums' : {'transectDist' : 100, 'trapDist' : 25},
+                            'Stoats' : {'transectDist' : 750, 'trapDist' : 100}} 
+
+
         self.bufferHRProp = 2.0
         self.adultSurv = {'Rats' : np.exp(-0.5), 'Possums' :  np.exp(-0.3), 
             'Stoats' : np.exp(-0.5)}
@@ -173,8 +184,8 @@ class Params(object):
         self.nRecheckPerYear = {'Rats' : 3.0, 'Possums' : 6.0, 'Stoats' : 3.0}
         self.trapNightsPerSet = {'Rats' : 10.0, 'Possums' : 1.0, 'Stoats' : 9.0}
 
-        self.iter = 1
-        self.nYears = 2
+        self.iter = 10
+        self.nYears = 4
         self.pTrapFail = 0.02
         self.pNeoPhobic = 0.03
 
@@ -589,7 +600,7 @@ class ProcessResults(object):
         P.figure(figsize=(8,8))
         P.plot(self.propertyHR_Ratio, self.costs, color='k', linewidth=3)
         P.xlabel('Ratio of property area to HR area', fontsize = 16)
-        P.ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 16)
+        P.ylabel('Trapping costs ($ \\$ ha^{-1}$)', fontsize = 16)
         fname = 'trappingCosts_{}.png'.format(self.params.species)
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
@@ -630,7 +641,7 @@ class ProcessResults(object):
         ax1.yaxis.label.set_color("blue")
 
 
-        ax2.set_ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 16)
+        ax2.set_ylabel('Trapping costs ($ \\$ ha^{-1}$)', fontsize = 16)
 
 
         fname = 'den_Cost_{}.png'.format(self.params.species)
@@ -654,7 +665,7 @@ class ProcessResults(object):
         ax1.spines["right"].set_edgecolor("blue")
         ax1.tick_params(axis='y', colors="blue")
         ax1.yaxis.label.set_color("blue")
-        ax2.set_ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 16)
+        ax2.set_ylabel('Trapping costs ($ \\$ ha^{-1}$)', fontsize = 16)
         fname = 'denTrapArea_Cost_{}.png'.format(self.params.species)
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
@@ -674,7 +685,7 @@ class ProcessResults(object):
         ax1.spines["right"].set_edgecolor("blue")
         ax1.tick_params(axis='y', colors="blue")
         ax1.yaxis.label.set_color("blue")
-        ax2.set_ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 16)
+        ax2.set_ylabel('Trapping costs ($ \\$ ha^{-1}$)', fontsize = 16)
         fname = 'pErad_Cost_{}.png'.format(self.params.species)
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
