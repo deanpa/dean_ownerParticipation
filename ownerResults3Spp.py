@@ -19,6 +19,7 @@ class ProcessResults(object):
         ## RUN FUNCTIONS
         self.iterWrapper()
         self.summaryPCapture()
+        self.find_Den_PropHR()
         self.plotCentralDensity()
         self.plotNStorage()
         self.plotPEradication()
@@ -153,7 +154,37 @@ class ProcessResults(object):
         fname = 'centralDensity_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
+
+
+
+
+    def find_Den_PropHR(self):
+        """
+        ## FIND THE PROP-HR RATIO WHEN DENSITY = IMPACT THRESHOLD
+        """
+        self.ratioAtDIF = {}
+        for spp in self.allSpp:
+#            print(spp, 'self.params.trRate5', self.params.trRate5[spp])
+            self.ratioAtDIF[spp] = {}
+            ## GET RATIO FOR FULL AREA
+            diffMeanN = np.abs(self.meanN[spp] - self.params.trRate5[spp])
+            minDiff = np.min(diffMeanN)
+            minMask = diffMeanN == minDiff
+#            print(spp, 'ratioThres', self.propertyHR_Ratio[spp][minMask])
+#            print(spp, 'Density Thres', self.meanN[spp][minMask])
+            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][minMask]
+            ## GET RATIO AT DIF FOR TRAPPED AREA
+            diffTrapN = np.abs(self.meanNTrapArea[spp] - self.params.trRate5[spp])
+            minDiffTrap = np.min(diffTrapN)
+#            print(spp, 'DiffTrap', diffTrapN)
+            minMaskTrap = diffTrapN == minDiffTrap
+#            print(spp, 'trapped Den thresh', self.meanNTrapArea[spp][minMaskTrap])
+#            print(spp, 'ratioThres_trapped', self.propertyHR_Ratio[spp][minMaskTrap])
+            self.ratioAtDIF[spp]['trappedNRatioThresh'] = self.propertyHR_Ratio[spp][minMaskTrap]
+
+        print('self.ratioAtDIF', self.ratioAtDIF)
+
 
     def plotNStorage(self):
 #        self.nStorage = np.array(self.simResultsLists['nStorage']) / self.areaHa *100
@@ -174,7 +205,7 @@ class ProcessResults(object):
         fname = 'density_paRatio_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
 
         ## PLOT PROPERTY AREA TO HR AREA RATIO
         P.figure(figsize=(18,6))
@@ -184,6 +215,16 @@ class ProcessResults(object):
             P.plot(self.propertyHR_Ratio[spp], self.meanN[spp], color='k', linewidth=3)
             P.fill_between(self.propertyHR_Ratio[spp], self.nQuants[spp][:, 0], self.nQuants[spp][:, 1], 
                 alpha = 0.2, color = 'k')
+
+            print(spp, 'xmax ratioAtDIF', self.ratioAtDIF[spp]['meanNRatioThresh'],
+                'ymax .trRate5', self.params.trRate5[spp])
+
+
+            P.hlines(y = self.params.trRate5[spp], xmax = self.ratioAtDIF[spp]['meanNRatioThresh'],
+                xmin = 0, color = 'r', linestyle = 'dashed')
+            P.vlines(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
+                ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
+
             cc += 1
             P.xlabel('Ratio of property area to HR area', fontsize = 14)
             P.ylabel('Density of ' + spp + ' ($km^{2}$)', fontsize = 14)
@@ -191,7 +232,45 @@ class ProcessResults(object):
         fname = 'den_Prop_HR_Ratio_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
+
+
+    def plotNTrapAreaStorage(self):
+        ## PLOT PA RATIO FOR TRAPPED AREA ONLY
+        P.figure(figsize=(18, 6))
+        cc = 1
+        for spp in self.allSpp:
+            P.subplot(1,3, cc)
+            P.plot(self.paRatio[spp][1:], self.meanNTrapArea[spp][1:], color='k', linewidth=3)
+            P.fill_between(self.paRatio[spp][1:], self.quantsNTrapArea[spp][1:, 0], 
+                self.quantsNTrapArea[spp][1:, 1], 
+                alpha = 0.2, color = 'k')
+            cc += 1
+            P.xlabel('Ratio of property perimeter to area', fontsize = 14)
+            P.ylabel('Trapped area density of ' + spp + ' ($km^{2}$)', fontsize = 14)
+        P.tight_layout()
+        fname = 'density_paRatio_Trapped_AllSpp.png'
+        pathFName = os.path.join(self.params.outputDataPath, fname)
+        P.savefig(pathFName, format='png', dpi = 300)
+        #P.show()
+
+        ## PLOT PROPERTY AREA TO HR AREA RATIO
+        P.figure(figsize=(18,6))
+        cc = 1
+        for spp in self.allSpp:
+            P.subplot(1,3, cc)
+            P.plot(self.propertyHR_Ratio[spp], self.meanNTrapArea[spp], color='k', linewidth=3)
+            P.fill_between(self.propertyHR_Ratio[spp], self.quantsNTrapArea[spp][:, 0], 
+                self.quantsNTrapArea[spp][:, 1], 
+                alpha = 0.2, color = 'k')
+            cc += 1
+            P.xlabel('Ratio of property area to HR area', fontsize = 14)
+            P.ylabel('Trapped area density of ' + spp + ' ($km^{2}$)', fontsize = 14)
+        P.tight_layout()
+        fname = 'den_Prop_HR_Ratio_Trapped_AllSpp.png'
+        pathFName = os.path.join(self.params.outputDataPath, fname)
+        P.savefig(pathFName, format='png', dpi = 300)
+        #P.show()
 
 
     def plotPEradication(self):
@@ -208,7 +287,7 @@ class ProcessResults(object):
         fname = 'pEradication_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
 
 
     def plotCosts(self):
@@ -224,7 +303,7 @@ class ProcessResults(object):
         fname = 'trappingCosts_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
 
         ## PLOT PROPERTY PERIMETER IN METRES VS COST
         P.figure(figsize=(8,8))
@@ -236,7 +315,7 @@ class ProcessResults(object):
         fname = 'trapCosts_Perimeter_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
 
 
 
@@ -251,6 +330,29 @@ class ProcessResults(object):
                 label = 'Density of ' + spp, linewidth=3)
             ax1.fill_between(self.propertyHR_Ratio[spp], self.nQuants[spp][:, 0], 
                 self.nQuants[spp][:, 1], alpha = 0.2, color = 'b')
+
+            # Calculate relative x and y max
+            current_xlim = ax1.get_xlim()
+            relative_xmax = (self.ratioAtDIF[spp]['meanNRatioThresh'] - 
+                current_xlim[0]) / (current_xlim[1] - current_xlim[0])
+
+            print('relative_xmax', relative_xmax)
+
+            current_ylim = ax1.get_ylim()
+            relative_ymax = (self.params.trRate5[spp] - 
+                current_ylim[0]) / (current_ylim[1] - current_ylim[0])
+
+            print('relative_ymax', relative_ymax)
+
+
+            ax1.axhline(y = self.params.trRate5[spp], 
+                xmax = relative_xmax,
+                xmin = 0, color = 'r', linestyle = 'dashed')
+            ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
+                ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+
+
             ax2 = ax1.twinx()
             ax2.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
             ax1.set_xlabel('Ratio of property area to HR area', fontsize = 14)
@@ -271,7 +373,7 @@ class ProcessResults(object):
         fname = 'den_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
 
     def plotDensityTrapArea(self):
         ## PLOT PROPERTY AREA TO HR AREA RATIO
@@ -284,6 +386,23 @@ class ProcessResults(object):
                 label = 'Density of ' + spp, linewidth=3)
             ax1.fill_between(self.propertyHR_Ratio[spp], self.quantsNTrapArea[spp][:,0], 
                 self.quantsNTrapArea[spp][:, 1], alpha = 0.2, color = 'b')
+
+           # Calculate relative x and y max
+            current_xlim = ax1.get_xlim()
+            relative_xmax = (self.ratioAtDIF[spp]['trappedNRatioThresh'] - 
+                current_xlim[0]) / (current_xlim[1] - current_xlim[0])
+
+            current_ylim = ax1.get_ylim()
+            relative_ymax = (self.params.trRate5[spp] - 
+                current_ylim[0]) / (current_ylim[1] - current_ylim[0])
+
+            ax1.axhline(y = self.params.trRate5[spp], 
+                xmax = relative_xmax,
+                xmin = 0, color = 'r', linestyle = 'dashed')
+            ax1.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+                ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+
             ax2 = ax1.twinx()
             ax2.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
             ax1.set_xlabel('Ratio of property area to HR area', fontsize = 14)
@@ -304,7 +423,7 @@ class ProcessResults(object):
         fname = 'denTrapArea_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
 
 
     def plotPEradCost(self):
@@ -324,7 +443,7 @@ class ProcessResults(object):
         fname = 'pErad_Cost_{}.png'.format(self.params.species)
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+        #P.show()
 
 
 

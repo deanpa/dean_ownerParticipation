@@ -153,7 +153,7 @@ class Params(object):
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
-        self.startDensity = {'Rats' : 4, 'Possums' : 5, 'Stoats' : 0.03}
+        self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 0.03}
         self.propHrMultiplier = [.5, 4.0]    # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
@@ -194,7 +194,7 @@ class Params(object):
         self.pNeoPhobic = 0.03
 
         ## DENSITY PER KM SQUARED RESULTING IN 5% TRACKING RATE
-        self.trRate5 = {'Rats' : 33.0, 'Possums' : 4.0, 'Stoats' : 1.2}
+        self.trRate5 = {'Rats' : 20.0, 'Possums' : 13.0, 'Stoats' : 0.4}
 
         baseDir = os.getenv('BROADSCALEDIR', default='.')
         if baseDir == '.':
