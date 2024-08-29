@@ -298,7 +298,7 @@ class ProcessResults(object):
             P.plot(self.propertyHR_Ratio[spp], self.costs[spp], label = spp, linewidth=3)
     
         P.xlabel('Ratio of property area to HR area', fontsize = 16)
-        P.ylabel('Annual trapping costs (\$$ ha^{-1}$)', fontsize = 16)
+        P.ylabel('Annual trapping costs ($ \\$ ha^{-1}$)', fontsize = 16)
         P.legend(loc = 'upper right')
         fname = 'trappingCosts_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
@@ -365,7 +365,7 @@ class ProcessResults(object):
             ax1.yaxis.label.set_color("blue")
             ax1.legend(loc = 'upper right')
             if cc == 3:
-                ax2.set_ylabel('Annual trapping costs (\$$ ha^{-1}$)', fontsize = 14)
+                ax2.set_ylabel('Annual trapping costs ($ \\$ ha^{-1}$)', fontsize = 14)
             else:
                 ax2.set_ylabel('')
             cc += 1
@@ -415,7 +415,7 @@ class ProcessResults(object):
             ax1.yaxis.label.set_color("blue")
             ax1.legend(loc = 'upper right')
             if cc == 3:
-                ax2.set_ylabel('Annual trapping costs (\$$ ha^{-1}$)', fontsize = 14)
+                ax2.set_ylabel('Annual trapping costs ($ \\$ ha^{-1}$)', fontsize = 14)
             else:
                 ax2.set_ylabel('')
             cc += 1
@@ -439,7 +439,7 @@ class ProcessResults(object):
         ax1.spines["right"].set_edgecolor("blue")
         ax1.tick_params(axis='y', colors="blue")
         ax1.yaxis.label.set_color("blue")
-        ax2.set_ylabel('Trapping costs (\$$ ha^{-1}$)', fontsize = 16)
+        ax2.set_ylabel('Trapping costs ($\\$ ha^{-1}$)', fontsize = 16)
         fname = 'pErad_Cost_{}.png'.format(self.params.species)
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
