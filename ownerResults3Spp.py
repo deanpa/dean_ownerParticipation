@@ -342,11 +342,11 @@ class ProcessResults(object):
             relative_ymax = (self.params.trRate5[spp] - 
                 current_ylim[0]) / (current_ylim[1] - current_ylim[0])
 
-            print('relative_ymax', relative_ymax)
+            print('relative_ymax', relative_ymax, 'tr rates', self.params.trRate5[spp])
 
 
             ax1.axhline(y = self.params.trRate5[spp], 
-                xmax = relative_xmax,
+                xmax = relative_xmax[0],
                 xmin = 0, color = 'r', linestyle = 'dashed')
             ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
                 ymax = relative_ymax, color = 'r', linestyle = 'dashed')
@@ -397,7 +397,7 @@ class ProcessResults(object):
                 current_ylim[0]) / (current_ylim[1] - current_ylim[0])
 
             ax1.axhline(y = self.params.trRate5[spp], 
-                xmax = relative_xmax,
+                xmax = relative_xmax[0],
                 xmin = 0, color = 'r', linestyle = 'dashed')
             ax1.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
                 ymax = relative_ymax, color = 'r', linestyle = 'dashed')
