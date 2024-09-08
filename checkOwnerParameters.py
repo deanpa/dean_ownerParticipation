@@ -32,7 +32,7 @@ class Params(object):
 
         baseDir = os.getenv('BROADSCALEDIR', default='.')
         if baseDir == '.':
-            baseDir = '/home/dean/workfolder/projects/dean_predatorfree/DataResults/Results/'
+            baseDir = '/home/dean/workfolder/projects/dean_ownerParticipation/DataResults/Results/'
         else:
             ## IF ON NESI, ADD THE PredatorFree BASE DIRECTORY
             baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
