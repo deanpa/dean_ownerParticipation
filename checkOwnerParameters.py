@@ -14,15 +14,15 @@ class Params(object):
         self.species = ['Rats', 'Possums', 'Stoats']
         self.nYears = 10
         self.iter = 1000
-#        self.r = {'Rats' : 3.0, 'Possums' : np.log(.75), 'Stoats' : np.log(3.0)}
-        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
+        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2}
         self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
 
         self.startDensity = {'Rats' : 1, 'Possums' : 6, 'Stoats' : 1}
 
-        self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
+        self.adultSurv = {'Rats' : np.exp(-0.79850769621), 'Possums' :  np.exp(-0.25), 
             'Stoats' : np.exp(-0.5)}
-        self.adultSurvDecay = {'Rats' : 2.8, 'Possums' : 3.0, 'Stoats' : 2.5}
+        self.adultSurvDecay = {'Rats' : 2.1, 'Possums' : 3.0, 'Stoats' : 2.5}
+#        self.adultSurvDecay = {'Rats' : 2.8, 'Possums' : 3.0, 'Stoats' : 2.5}
         self.perCapRecruit = {'Rats' : 4.5, 'Possums' : .8, 'Stoats' : 4.5}
         self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5}
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
@@ -38,7 +38,7 @@ class Params(object):
             baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
         ## GET USER
         userName = getpass.getuser()
-        resultsPath = os.path.join(userName, 'OwnerParticipation')
+        resultsPath = os.path.join(userName, 'OwnerParticipation','ParameterCheck')
         ## PUT TOGETHER THE BASE DIRECTORY AND PATH TO RESULTS DIRECTORY 
         self.outputDataPath = os.path.join(baseDir, resultsPath)
 
