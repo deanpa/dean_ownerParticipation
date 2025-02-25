@@ -57,6 +57,16 @@ class ProcessResults(object):
             self.meanNTrapArea[spp] = np.mean(densityTrapArea, axis = 1)
             self.quantsNTrapArea[spp] = mquantiles(densityTrapArea, axis = 1, prob = [0.025, 0.975])
 
+#        print(spp, 'propArea', self.propArea[spp])
+
+            for pp in range(len(self.propArea[spp])):
+                print(spp, pp, 'hr radius', np.round(self.hrRadius[spp], 3), 
+                    'hr area', np.round((np.pi * self.hrRadius[spp]**2) / 10000, 2),
+                    'prop area', np.round(self.propArea[spp][pp],3),
+                    'ratio', np.round(self.propArea[spp][pp] / 
+                        ((np.pi * self.hrRadius[spp]**2)/10000), 3))
+
+            print(spp, 'extent area', self.areaHa[spp])
 
     def readJSON(self, i, spp):
         # Load the JSON file back into a list
