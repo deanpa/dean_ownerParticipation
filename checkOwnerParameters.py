@@ -15,7 +15,7 @@ class Params(object):
         self.nYears = 10
         self.iter = 1000
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2}
-        self.sigma = {'Rats' : 40, 'Possums' : 90, 'Stoats' : 300}
+        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
 
         self.startDensity = {'Rats' : 1, 'Possums' : 6, 'Stoats' : 1}
 

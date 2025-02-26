@@ -12,6 +12,19 @@ import json
 import csv
 import resource
 
+
+def logit(x):
+    return np.log(x) - np.log(1 - x)
+
+def inv_logit(x):
+    return np.exp(x) / (1 + np.exp(x))
+
+def getBetaParas(mg0, g0Sd):
+    a = mg0 * ((mg0 * (1.0 - mg0)) / g0Sd**2.0 - 1.0)
+    b = (1.0 - mg0) * ((mg0 * (1.0 - mg0)) / g0Sd**2.0 - 1.0)
+    return (a, b)
+
+
 @njit
 def distFX(x1, y1, x2, y2):
     """
@@ -148,15 +161,16 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.species = 'Stoats'
-        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
-        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
-        self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
+        self.model = 'Model1'
+        self.species = 'Possums'
+        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2, 'SD_multi': 0.15}
+        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300, 'SD_multi': 0.15}
+        self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02, 'SD_multi': 0.2}
 
         self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 0.03}
         self.propHrMultiplier = [.5, 4.0]    # 2.0]
         self.extentHRMultiplier = 10
-        self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
+        self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000, 'SD_multi': 0.2}
 
         ## CABP DOC RECOMMENDATIONS
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
@@ -174,11 +188,11 @@ class Params(object):
                             'Stoats' : {'transectDist' : 750, 'trapDist' : 100}} 
 
         self.bufferHRProp = 2.0
-        self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
-            'Stoats' : np.exp(-0.5)}
-        self.adultSurvDecay = {'Rats' : 2.8, 'Possums' : 3.0, 'Stoats' : 2.5}
-        self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5}
-        self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5}
+        self.adultSurv = {'Rats' : np.exp(-0.79850769621), 'Possums' :  np.exp(-0.25), 
+            'Stoats' : np.exp(-0.5), 'SD_multi': 0.1}
+        self.adultSurvDecay = {'Rats' : 2.1, 'Possums' : 3.0, 'Stoats' : 2.5, 'SD_multi': 0.1}
+        self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5, 'SD_multi': 0.1}
+        self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5, 'SD_multi': 0.1}
         self.distanceDD = {'Rats' : 1.5, 'Possums' : 1.5, 'Stoats' : 1.5}
 
         ## COST PARAMETERS
@@ -196,17 +210,26 @@ class Params(object):
         ## DENSITY PER KM SQUARED RESULTING IN 5% TRACKING RATE
         self.trRate5 = {'Rats' : 20.0, 'Possums' : 13.0, 'Stoats' : 0.4}
 
-        baseDir = os.getenv('BROADSCALEDIR', default='.')
-        if baseDir == '.':
-            baseDir = '/home/dean/workfolder/projects/dean_ownerParticipation/DataResults/Results/'
-        else:
-            ## IF ON NESI, ADD THE PredatorFree BASE DIRECTORY
-            baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
         ## GET USER
         userName = getpass.getuser()
-        resultsPath = os.path.join(userName, 'OwnerParticipation')
-        ## PUT TOGETHER THE BASE DIRECTORY AND PATH TO RESULTS DIRECTORY 
-        self.outputDataPath = os.path.join(baseDir, resultsPath)
+        resultsPath = os.path.join('DataResults', 'Results', userName, 'OwnerParticipation',
+            self.model)
+
+        baseDir = os.getenv('BROADSCALEDIR', default='.')
+        if baseDir == '.':
+            baseDir = '/home/dean/workfolder/projects/dean_ownerParticipation/'
+            self.outputDataPath = os.path.join(baseDir, resultsPath)
+        else:
+            # ## ON NESI
+            nesiNoBackup = '/nesi/nobackup/landcare04126/'
+#            baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
+            self.outputDataPath = os.path.join(nesiNoBackup, resultsPath)
+#        ## GET USER
+#        userName = getpass.getuser()
+#        resultsPath = os.path.join(userName, 'OwnerParticipation')
+#        ## PUT TOGETHER THE BASE DIRECTORY AND PATH TO RESULTS DIRECTORY 
+#        self.outputDataPath = os.path.join(baseDir, resultsPath)
+
         self.jobID = int(os.getenv('SLURM_ARRAY_TASK_ID', default = '0'))
         print('jobID', self.jobID)
         print('Results directory:', self.outputDataPath)
@@ -216,6 +239,8 @@ class Params(object):
             os.makedirs(self.outputDataPath)
         fName = 'ownerResults_{}_Job_{}.json'.format(self.species, self.jobID)
         self.simResultsPath = os.path.join(self.outputDataPath, fName)
+
+
 
 class Simulation(object):
     def __init__(self, params):
@@ -355,19 +380,20 @@ class Simulation(object):
                 self.n_denseTrap_buf = np.sum(buffMask) 
                 self.n_normTrap_buf = np.sum(trapBuffMask)
                 self.calcCost(prop)
-
+            
+            self.getRandomVariates()
             (X,Y) = loopYears(prop, self.nProperties, 
                 self.params.startDensity[self.params.species], self.areaHa, 
                 self.nStorage, self.nTrappingArea, self.extentSide, 
-                self.params.sigma[self.params.species], 
-                self.params.g0[self.params.species], self.params.nYears,
+                self.sigma_p, 
+                self.g0_p, self.params.nYears,
                 xTrap_prop, yTrap_prop, self.trapNights, self.params.pTrapFail,
-                self.params.pNeoPhobic, self.params.adultSurv[self.params.species],
-                self.params.adultSurvDecay[self.params.species], 
-                self.params.perCapRecruit[self.params.species], 
-                self.params.recruitDecay[self.params.species], 
-                self.params.dispersalSD[self.params.species],
-                self.params.k[self.params.species], self.centre, self.DDRadius, self.DDArea,
+                self.params.pNeoPhobic, self.adultSurv_p,
+                self.adultSurvDecay_p, 
+                self.perCapRecruit_p, 
+                self.recruitDecay_p, 
+                self.dispersalSD_p,
+                self.k_p, self.centre, self.DDRadius, self.DDArea,
                 self.eradEventSum, self.centralDensity, self.propRadius, self.pCapture)
 
         ## DEBUGGING
@@ -375,17 +401,11 @@ class Simulation(object):
         trapMaxBufMask = self.distCentreTrap <= self.bufferRadius[prop]
         trapBuffMask = trapMinBufMask & trapMaxBufMask
         trapNormalMask = self.distCentreTrap > self.bufferRadius[prop]
-        ############
-
         ## DEBUGGING
-#        debugXBuf = xTrap_buf
-#        debugYBuf = yTrap_buf
         xydataBuf = np.zeros((len(xTrap_buf), 2))
         xydataBuf[:,0] = xTrap_buf
         xydataBuf[:,1] = yTrap_buf
-
-        self.writeCSV('Buf', xydataBuf)
-
+#        self.writeCSV('Buf', xydataBuf)
         trapDebugX = self.trapX[trapNormalMask]
         trapDebugY = self.trapY[trapNormalMask]
 #        trapDebugX = self.trapX[trapBuffMask]
@@ -393,7 +413,34 @@ class Simulation(object):
         xydataTrap = np.zeros((len(trapDebugX),2))
         xydataTrap[:,0] = trapDebugX
         xydataTrap[:,1] = trapDebugY
-        self.writeCSV('TrapNormal', xydataTrap)
+#        self.writeCSV('TrapNormal', xydataTrap)
+
+
+    def getRandomVariates(self):
+        ## SIGMA
+        self.sigma_p = np.random.normal(self.params.sigma[self.params.species],
+            self.params.sigma[self.params.species] * self.params.sigma['SD_multi'])
+        ## g0
+        (a,b) = getBetaParas(self.params.g0[self.params.species], 
+            self.params.g0[self.params.species] * self.params.g0['SD_multi'])
+        self.g0_p = np.random.beta(a,b)
+        ## ADULT SURVIVAL
+        self.adultSurv_p = np.random.normal(self.params.adultSurv[self.params.species],
+            self.params.adultSurv[self.params.species] * self.params.adultSurv['SD_multi'])
+        self.adultSurvDecay_p = np.random.normal(self.params.adultSurvDecay[self.params.species],
+            self.params.adultSurvDecay[self.params.species] * self.params.adultSurvDecay['SD_multi'])
+        ## RECRUITMENT
+        self.perCapRecruit_p = np.random.normal(self.params.perCapRecruit[self.params.species],
+            self.params.perCapRecruit[self.params.species] * self.params.perCapRecruit['SD_multi'])
+        self.recruitDecay_p = np.random.normal(self.params.recruitDecay[self.params.species],
+            self.params.recruitDecay[self.params.species] * self.params.recruitDecay['SD_multi'])
+        ## DISPERSAL
+        self.dispersalSD_p = np.random.normal(self.params.dispersalSD[self.params.species],
+            self.params.dispersalSD[self.params.species] * self.params.dispersalSD['SD_multi'])
+        ## CARRYING CAPACITY
+        self.k_p = np.random.normal(self.params.k[self.params.species],
+            self.params.k[self.params.species] * self.params.k['SD_multi'])
+
 
     def writeCSV(self, n, xy):
         fname = 'xyDat{}.csv'.format(n)
