@@ -72,6 +72,13 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
             pNoTrap = pNoTrap**trapNights
             pCaptAll = 1.0 - (np.prod(pNoTrap) * (1.0 - pNeoPhobic))
 
+
+            if pCaptAll < 0.995:
+                pCaptAll = 0.995
+            elif pCaptAll <= 0.0:
+                pCaptAll = 0.000001
+
+
             if prop == 0 & yr == 0:
                 pCapture[ind] = pCaptAll
 
@@ -98,6 +105,15 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
             pMaxRec = np.exp(-nDD**2 / kSpp**recruitDecay)
 #            pMaxRec = np.exp(-nDD**2 / kDistanceDD**recruitDecay)
             recRate = perCapRecruit * pMaxRec
+
+
+            if pSurv < 0.995:
+                pSurv = 0.995
+            elif pSurv <= 0.0:
+                pSurv = 0.000001
+
+
+
 
             surv_ind = np.random.binomial(1, pSurv)
             if surv_ind == 0:
@@ -162,15 +178,15 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 class Params(object):
     def __init__(self):
         self.model = 'Model1'
-        self.species = 'Possums'
-        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2, 'SD_multi': 0.15}
+        self.species = 'Stoats'
+        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2, 'SD_multi': 0.05}  #.15
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300, 'SD_multi': 0.15}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02, 'SD_multi': 0.2}
 
         self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 0.03}
         self.propHrMultiplier = [.5, 4.0]    # 2.0]
         self.extentHRMultiplier = 10
-        self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000, 'SD_multi': 0.2}
+        self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000, 'SD_multi': 0.1}
 
         ## CABP DOC RECOMMENDATIONS
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
@@ -189,10 +205,10 @@ class Params(object):
 
         self.bufferHRProp = 2.0
         self.adultSurv = {'Rats' : np.exp(-0.79850769621), 'Possums' :  np.exp(-0.25), 
-            'Stoats' : np.exp(-0.5), 'SD_multi': 0.1}
-        self.adultSurvDecay = {'Rats' : 2.1, 'Possums' : 3.0, 'Stoats' : 2.5, 'SD_multi': 0.1}
-        self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5, 'SD_multi': 0.1}
-        self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5, 'SD_multi': 0.1}
+            'Stoats' : np.exp(-0.5), 'SD_multi': 0.05}  #.1
+        self.adultSurvDecay = {'Rats' : 2.1, 'Possums' : 3.0, 'Stoats' : 2.5, 'SD_multi': 0.05}
+        self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5, 'SD_multi': 0.05}
+        self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5, 'SD_multi': 0.05}
         self.distanceDD = {'Rats' : 1.5, 'Possums' : 1.5, 'Stoats' : 1.5}
 
         ## COST PARAMETERS
@@ -418,12 +434,14 @@ class Simulation(object):
 
     def getRandomVariates(self):
         ## SIGMA
-        self.sigma_p = np.random.normal(self.params.sigma[self.params.species],
-            self.params.sigma[self.params.species] * self.params.sigma['SD_multi'])
+#        self.sigma_p = np.random.normal(self.params.sigma[self.params.species],
+#            self.params.sigma[self.params.species] * self.params.sigma['SD_multi'])
+        self.sigma_p = self.params.sigma[self.params.species]
         ## g0
-        (a,b) = getBetaParas(self.params.g0[self.params.species], 
-            self.params.g0[self.params.species] * self.params.g0['SD_multi'])
-        self.g0_p = np.random.beta(a,b)
+#        (a,b) = getBetaParas(self.params.g0[self.params.species], 
+#            self.params.g0[self.params.species] * self.params.g0['SD_multi'])
+#        self.g0_p = np.random.beta(a,b)
+        self.g0_p = self.params.g0[self.params.species]
         ## ADULT SURVIVAL
         self.adultSurv_p = np.random.normal(self.params.adultSurv[self.params.species],
             self.params.adultSurv[self.params.species] * self.params.adultSurv['SD_multi'])

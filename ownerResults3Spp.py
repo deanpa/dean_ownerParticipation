@@ -216,7 +216,7 @@ class ProcessResults(object):
 #                self.ratioAtDIF[spp]['trapAreaDenHorizLine'] = self.params.trRate5[spp]
                 self.ratioAtDIF[spp]['trappedNRatioThresh'] = np.max(self.propertyHR_Ratio[spp])
 
-#            print(spp, 'min Index mean n trap area', min_index)
+            print(spp, 'min Index mean n trap area', min_index)
 
 
 
@@ -584,7 +584,7 @@ class ProcessResults(object):
         fname = 'den_2Rows_TrapArea_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+#        P.show()
 
 
 
