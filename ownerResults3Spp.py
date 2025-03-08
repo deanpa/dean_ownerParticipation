@@ -261,10 +261,10 @@ class ProcessResults(object):
                 'ymax .trRate5', self.params.trRate5[spp])
 
 
-            P.hlines(y = self.params.trRate5[spp], xmax = self.ratioAtDIF[spp]['meanNRatioThresh'],
-                xmin = 0, color = 'r', linestyle = 'dashed')
-            P.vlines(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
-                ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
+###            P.hlines(y = self.params.trRate5[spp], xmax = self.ratioAtDIF[spp]['meanNRatioThresh'],
+###                xmin = 0, color = 'r', linestyle = 'dashed')
+###            P.vlines(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
+###                ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
 
             cc += 1
             P.xlabel('Ratio of property area to HR area', fontsize = 14)

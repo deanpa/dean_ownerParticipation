@@ -177,7 +177,7 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.model = 'Model1'
+        self.model = 'Model2'
         self.species = 'Stoats'
         self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2, 'SD_multi': 0.05}  #.15
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300, 'SD_multi': 0.15}
@@ -443,21 +443,27 @@ class Simulation(object):
 #        self.g0_p = np.random.beta(a,b)
         self.g0_p = self.params.g0[self.params.species]
         ## ADULT SURVIVAL
-        self.adultSurv_p = np.random.normal(self.params.adultSurv[self.params.species],
-            self.params.adultSurv[self.params.species] * self.params.adultSurv['SD_multi'])
-        self.adultSurvDecay_p = np.random.normal(self.params.adultSurvDecay[self.params.species],
-            self.params.adultSurvDecay[self.params.species] * self.params.adultSurvDecay['SD_multi'])
+#        self.adultSurv_p = np.random.normal(self.params.adultSurv[self.params.species],
+#            self.params.adultSurv[self.params.species] * self.params.adultSurv['SD_multi'])
+        self.adultSurv_p = self.params.adultSurv[self.params.species]
+#        self.adultSurvDecay_p = np.random.normal(self.params.adultSurvDecay[self.params.species],
+#            self.params.adultSurvDecay[self.params.species] * self.params.adultSurvDecay['SD_multi'])
+        self.adultSurvDecay_p = self.params.adultSurvDecay[self.params.species]
         ## RECRUITMENT
-        self.perCapRecruit_p = np.random.normal(self.params.perCapRecruit[self.params.species],
-            self.params.perCapRecruit[self.params.species] * self.params.perCapRecruit['SD_multi'])
-        self.recruitDecay_p = np.random.normal(self.params.recruitDecay[self.params.species],
-            self.params.recruitDecay[self.params.species] * self.params.recruitDecay['SD_multi'])
+#        self.perCapRecruit_p = np.random.normal(self.params.perCapRecruit[self.params.species],
+#            self.params.perCapRecruit[self.params.species] * self.params.perCapRecruit['SD_multi'])
+        self.perCapRecruit_p = self.params.perCapRecruit[self.params.species]
+#        self.recruitDecay_p = np.random.normal(self.params.recruitDecay[self.params.species],
+#            self.params.recruitDecay[self.params.species] * self.params.recruitDecay['SD_multi'])
+        self.recruitDecay_p = self.params.recruitDecay[self.params.species]
         ## DISPERSAL
-        self.dispersalSD_p = np.random.normal(self.params.dispersalSD[self.params.species],
-            self.params.dispersalSD[self.params.species] * self.params.dispersalSD['SD_multi'])
+#        self.dispersalSD_p = np.random.normal(self.params.dispersalSD[self.params.species],
+#            self.params.dispersalSD[self.params.species] * self.params.dispersalSD['SD_multi'])
+        self.dispersalSD_p = self.params.dispersalSD[self.params.species]
         ## CARRYING CAPACITY
-        self.k_p = np.random.normal(self.params.k[self.params.species],
-            self.params.k[self.params.species] * self.params.k['SD_multi'])
+#        self.k_p = np.random.normal(self.params.k[self.params.species],
+#            self.params.k[self.params.species] * self.params.k['SD_multi'])
+        self.k_p = self.params.k[self.params.species]
 
 
     def writeCSV(self, n, xy):
