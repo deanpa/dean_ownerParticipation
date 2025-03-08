@@ -91,7 +91,7 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
         N = len(X)
         ## LOOP INDIVIDUALS AGAIN FOR SURVIVAL, RECRUITMENT AND DISPERSAL                    
         nRemoved = 0
-#            print('prop', prop, 'iter', i, 'yr', yr , 'N FOLLOWING TRAPPING', N)
+        print('prop', prop, 'yr', yr , 'N FOLLOWING TRAPPING', N)
         for ind in range(N):
             indx = ind - nRemoved
 
@@ -465,6 +465,14 @@ class Simulation(object):
 #            self.params.k[self.params.species] * self.params.k['SD_multi'])
         self.k_p = self.params.k[self.params.species]
 
+#        print('sig', self.sigma_p)
+#        print('g0', self.g0_p)
+#        print('ad sur', self.adultSurv_p)
+#        print('ad sur de', self.adultSurvDecay_p)
+#        print('rec', self.perCapRecruit_p)
+#        print('rec decay', self.recruitDecay_p)
+#        print('self.dispersalSD_p', self.dispersalSD_p)
+#        print('self.k_p', self.k_p)
 
     def writeCSV(self, n, xy):
         fname = 'xyDat{}.csv'.format(n)
