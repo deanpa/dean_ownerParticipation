@@ -148,8 +148,9 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
+        self.model = 'Model2'
         self.species = 'Stoats'
-        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 3.0}
+        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2}
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
@@ -174,9 +175,9 @@ class Params(object):
                             'Stoats' : {'transectDist' : 750, 'trapDist' : 100}} 
 
         self.bufferHRProp = 2.0
-        self.adultSurv = {'Rats' : np.exp(-0.4), 'Possums' :  np.exp(-0.25), 
+        self.adultSurv = {'Rats' : np.exp(-0.79850769621), 'Possums' :  np.exp(-0.25), 
             'Stoats' : np.exp(-0.5)}
-        self.adultSurvDecay = {'Rats' : 2.8, 'Possums' : 3.0, 'Stoats' : 2.5}
+        self.adultSurvDecay = {'Rats' : 2.1, 'Possums' : 3.0, 'Stoats' : 2.5}
         self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5}
         self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5}
         self.distanceDD = {'Rats' : 1.5, 'Possums' : 1.5, 'Stoats' : 1.5}
@@ -189,24 +190,53 @@ class Params(object):
         self.trapNightsPerSet = {'Rats' : 10.0, 'Possums' : 1.0, 'Stoats' : 9.0}
 
         self.iter = 1
-        self.nYears = 4
+        self.nYears = 8
         self.pTrapFail = 0.02
         self.pNeoPhobic = 0.03
 
         ## DENSITY PER KM SQUARED RESULTING IN 5% TRACKING RATE
         self.trRate5 = {'Rats' : 20.0, 'Possums' : 13.0, 'Stoats' : 0.4}
 
-        baseDir = os.getenv('BROADSCALEDIR', default='.')
-        if baseDir == '.':
-            baseDir = '/home/dean/workfolder/projects/dean_ownerParticipation/DataResults/Results/'
-        else:
-            ## IF ON NESI, ADD THE PredatorFree BASE DIRECTORY
-            baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
+
+
+
+
         ## GET USER
         userName = getpass.getuser()
-        resultsPath = os.path.join(userName, 'OwnerParticipation')
-        ## PUT TOGETHER THE BASE DIRECTORY AND PATH TO RESULTS DIRECTORY 
-        self.outputDataPath = os.path.join(baseDir, resultsPath)
+        resultsPath = os.path.join('DataResults', 'Results', userName, 'OwnerParticipation',
+            self.model)
+
+        baseDir = os.getenv('BROADSCALEDIR', default='.')
+        if baseDir == '.':
+            baseDir = '/home/dean/workfolder/projects/dean_ownerParticipation/'
+            self.outputDataPath = os.path.join(baseDir, resultsPath)
+        else:
+            # ## ON NESI
+            nesiNoBackup = '/nesi/nobackup/landcare04126/'
+#            baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
+            self.outputDataPath = os.path.join(nesiNoBackup, resultsPath)
+
+
+
+
+
+
+
+
+
+#        baseDir = os.getenv('BROADSCALEDIR', default='.')
+#        if baseDir == '.':
+#            baseDir = '/home/dean/workfolder/projects/dean_ownerParticipation/DataResults/Results/'
+#        else:
+#            ## IF ON NESI, ADD THE PredatorFree BASE DIRECTORY
+#            baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
+#        ## GET USER
+#        userName = getpass.getuser()
+#        resultsPath = os.path.join(userName, 'OwnerParticipation')
+#        ## PUT TOGETHER THE BASE DIRECTORY AND PATH TO RESULTS DIRECTORY 
+#        self.outputDataPath = os.path.join(baseDir, resultsPath)
+        
+
         self.jobID = int(os.getenv('SLURM_ARRAY_TASK_ID', default = '0'))
         print('jobID', self.jobID)
         print('Results directory:', self.outputDataPath)
