@@ -513,8 +513,8 @@ class ProcessResults(object):
             costRatio = self.costs[spp] / baseCost
 
             ax2 = ax1.twinx()
-            ax2.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
-#            ax2.plot(self.propertyHR_Ratio[spp], costRatio, color='k', linewidth=3)
+###            ax2.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
+            ax2.plot(self.propertyHR_Ratio[spp], costRatio, color='k', linewidth=3)
             ax1.set_xlabel('')
             if cc == 1:
                 ax1.set_ylabel('Density over entire area ($km^{-2}$)', fontsize = 14)
@@ -525,8 +525,8 @@ class ProcessResults(object):
             ax1.yaxis.label.set_color("blue")
 #            ax1.legend(loc = 'upper left')
             if cc == 3:
-                ax2.set_ylabel('Annual trapping cost ($ \\$ ha^{-1}$)', fontsize = 14)
-#                ax2.set_ylabel('Annual proportional cost increase', fontsize = 14)
+###                ax2.set_ylabel('Annual trapping cost ($ \\$ ha^{-1}$)', fontsize = 14)
+                ax2.set_ylabel('Annual proportional cost increase', fontsize = 14)
             else:
                 ax2.set_ylabel('')
             cc += 1
@@ -581,7 +581,8 @@ class ProcessResults(object):
 #                ax4.set_ylabel('')
             cc += 1
         P.tight_layout()
-        fname = 'den_2Rows_TrapArea_Cost_AllSpp.png'
+        fname = 'den_2Rows_TrapArea_PrpCost_AllSpp.png'
+#        fname = 'den_2Rows_TrapArea_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
 #        P.show()

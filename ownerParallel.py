@@ -179,14 +179,14 @@ class Params(object):
     def __init__(self):
         self.model = 'Model2'
         self.species = 'Stoats'
-        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2, 'SD_multi': 0.05}  #.15
-        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300, 'SD_multi': 0.15}
-        self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02, 'SD_multi': 0.2}
+        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2}
+        self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
+        self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
         self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 0.03}
         self.propHrMultiplier = [.5, 4.0]    # 2.0]
         self.extentHRMultiplier = 10
-        self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000, 'SD_multi': 0.1}
+        self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
 
         ## CABP DOC RECOMMENDATIONS
         self.trapLayout = {'Rats' : {'transectDist' : 100, 'trapDist' : 50}, 
@@ -205,10 +205,10 @@ class Params(object):
 
         self.bufferHRProp = 2.0
         self.adultSurv = {'Rats' : np.exp(-0.79850769621), 'Possums' :  np.exp(-0.25), 
-            'Stoats' : np.exp(-0.5), 'SD_multi': 0.05}  #.1
-        self.adultSurvDecay = {'Rats' : 2.1, 'Possums' : 3.0, 'Stoats' : 2.5, 'SD_multi': 0.05}
-        self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5, 'SD_multi': 0.05}
-        self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5, 'SD_multi': 0.05}
+            'Stoats' : np.exp(-0.5)}
+        self.adultSurvDecay = {'Rats' : 2.1, 'Possums' : 3.0, 'Stoats' : 2.5}
+        self.perCapRecruit = {'Rats' : 4.5, 'Possums' : 0.8, 'Stoats' : 4.5}
+        self.recruitDecay = {'Rats' : 1.65, 'Possums' : 1.93, 'Stoats' : 1.5}
         self.distanceDD = {'Rats' : 1.5, 'Possums' : 1.5, 'Stoats' : 1.5}
 
         ## COST PARAMETERS
@@ -238,13 +238,7 @@ class Params(object):
         else:
             # ## ON NESI
             nesiNoBackup = '/nesi/nobackup/landcare04126/'
-#            baseDir = os.path.join(baseDir, 'DataResults', 'Results') 
             self.outputDataPath = os.path.join(nesiNoBackup, resultsPath)
-#        ## GET USER
-#        userName = getpass.getuser()
-#        resultsPath = os.path.join(userName, 'OwnerParticipation')
-#        ## PUT TOGETHER THE BASE DIRECTORY AND PATH TO RESULTS DIRECTORY 
-#        self.outputDataPath = os.path.join(baseDir, resultsPath)
 
         self.jobID = int(os.getenv('SLURM_ARRAY_TASK_ID', default = '0'))
         print('jobID', self.jobID)
@@ -397,19 +391,19 @@ class Simulation(object):
                 self.n_normTrap_buf = np.sum(trapBuffMask)
                 self.calcCost(prop)
             
-            self.getRandomVariates()
+#            self.getRandomVariates()
             (X,Y) = loopYears(prop, self.nProperties, 
                 self.params.startDensity[self.params.species], self.areaHa, 
                 self.nStorage, self.nTrappingArea, self.extentSide, 
-                self.sigma_p, 
-                self.g0_p, self.params.nYears,
+                self.params.sigma[self.params.species], 
+                self.params.g0[self.params.species], self.params.nYears,
                 xTrap_prop, yTrap_prop, self.trapNights, self.params.pTrapFail,
-                self.params.pNeoPhobic, self.adultSurv_p,
-                self.adultSurvDecay_p, 
-                self.perCapRecruit_p, 
-                self.recruitDecay_p, 
-                self.dispersalSD_p,
-                self.k_p, self.centre, self.DDRadius, self.DDArea,
+                self.params.pNeoPhobic, self.params.adultSurv[self.params.species],
+                self.params.adultSurvDecay[self.params.species], 
+                self.params.perCapRecruit[self.params.species], 
+                self.params.recruitDecay[self.params.species], 
+                self.params.dispersalSD[self.params.species],
+                self.params.k[self.params.species], self.centre, self.DDRadius, self.DDArea,
                 self.eradEventSum, self.centralDensity, self.propRadius, self.pCapture)
 
         ## DEBUGGING
