@@ -20,10 +20,10 @@ class ProcessResults(object):
         self.iterWrapper()
         self.summaryPCapture()
         self.find_Den_PropHR()
-        self.plotCentralDensity()
-        self.plotNStorage()
-        self.plotPEradication()
-        self.plotCosts()
+###        self.plotCentralDensity()
+###        self.plotNStorage()
+###        self.plotPEradication()
+###        self.plotCosts()
 #        self.plotDensityCost()
 #        self.plotDensityTrapArea()
         self.plot2RowsDensityCost()
@@ -182,8 +182,12 @@ class ProcessResults(object):
             minMask = diffMeanN == minDiff
 #            print(spp, 'ratioThres', self.propertyHR_Ratio[spp][minMask])
 #            print(spp, 'Density Thres', self.meanN[spp][minMask])
-            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][minMask]
-###            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][min_index]
+            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][minMask] # [min_index]  
+#            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][min_index]
+
+
+            print(spp, 'meanNRatioThresh', self.ratioAtDIF[spp]['meanNRatioThresh'], 
+                'shp', self.ratioAtDIF[spp]['meanNRatioThresh'].shape)
 
             ####################################
             ## GET RATIO AT DIF FOR TRAPPED AREA
@@ -482,20 +486,33 @@ class ProcessResults(object):
 
             # Calculate relative x and y max
             current_xlim = ax1.get_xlim()
+
             relative_xmax = (self.ratioAtDIF[spp]['meanNRatioThresh'] - 
                 current_xlim[0]) / (current_xlim[1] - current_xlim[0])
 
+            if cc == 1:
+                relative_xmax = relative_xmax + .04
+
+
+            print('current_xlim', current_xlim, 'relative xmax', relative_xmax[0])
+            print('self.ratioAtDIF[spp]', self.ratioAtDIF[spp]['meanNRatioThresh']) 
+
             current_ylim = ax1.get_ylim()
-#            relative_ymax = (self.ratioAtDIF[spp]['fullAreaDenHorizLine'] - 
-#                current_ylim[0]) / (current_ylim[1] - current_ylim[0])
             relative_ymax = (self.params.trRate5[spp] - 
                 current_ylim[0]) / (current_ylim[1] - current_ylim[0])
+
 
             ax1.axhline(y = self.params.trRate5[spp], 
                 xmax = relative_xmax[0],
                 xmin = 0, color = 'r', linestyle = 'dashed')
-            ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
-                ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+            if cc == 1:
+                ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'] - current_xlim[0] - .1, ymin = 0,
+                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+            else:
+                ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
+                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
 
             baseCost = self.costs[spp][0]
@@ -544,14 +561,13 @@ class ProcessResults(object):
             relative_ymax = (self.params.trRate5[spp] - 
                 current_ylim[0]) / (current_ylim[1] - current_ylim[0])
 
-
-            print('############ DEBUG TR DEN', spp, self.params.trRate5[spp])
-
             ax3.axhline(y = self.params.trRate5[spp], 
                 xmax = relative_xmax,
                 xmin = 0, color = 'r', linestyle = 'dashed')
-            ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
-                ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+            if cc < 6:
+                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
 
 #            ax4 = ax3.twinx()
@@ -571,7 +587,7 @@ class ProcessResults(object):
 #                ax4.set_ylabel('')
             cc += 1
         P.tight_layout()
-        fname = 'den_2Rows_TrapArea_PrpCost_AllSpp.png'
+        fname = 'den_2Rows_TrapArea_PrpCost_AllSpp3.png'
 #        fname = 'den_2Rows_TrapArea_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
