@@ -150,11 +150,14 @@ class Params(object):
     def __init__(self):
         self.model = 'Model2'
         self.species = 'Stoats'
-        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.2}
+        prpK = 0.25
+###        self.k = {'Rats' : 5.0 * prpK, 'Possums' : 8.0 * prpK, 'Stoats' : 2.2 * prpK}
+###        self.k = {'Rats' : 5.0 * , 'Possums' : 8.0, 'Stoats' : 2.2}
+        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.5}
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
-        self.startDensity = {'Rats' : 4, 'Possums' : 7, 'Stoats' : 0.03}
+        self.startDensity = {'Rats' : 5, 'Possums' : 8, 'Stoats' : 0.025}
         self.propHrMultiplier = [.5, 4.0]    # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}

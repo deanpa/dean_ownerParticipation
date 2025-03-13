@@ -172,17 +172,30 @@ class ProcessResults(object):
             if np.any(exceedMask):
                 # np.argmax returns the first index of the maximum value
                 min_index = np.argmax(exceedMask)  
+
+
+                meanPropRatio = np.mean(([self.propertyHR_Ratio[spp][min_index], 
+                    self.propertyHR_Ratio[spp][min_index - 1]]))
+
+
+
             else:
                 # or handle the case when there is no True value
                 min_index = None  
-#            self.ratioAtDIF[spp]['fullAreaDenHorizLine'] = self.params.trRate5[spp]
-#            self.ratioAtDIF[spp]['fullAreaDenHorizLine'] = self.meanN_values[min_index]
+                meanPropRatio = 5000
+
+
+
             diffMeanN = np.abs(self.meanN[spp] - self.params.trRate5[spp])
             minDiff = np.min(diffMeanN)
             minMask = diffMeanN == minDiff
-#            print(spp, 'ratioThres', self.propertyHR_Ratio[spp][minMask])
-#            print(spp, 'Density Thres', self.meanN[spp][minMask])
-            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][minMask] # [min_index]  
+
+
+
+
+
+            self.ratioAtDIF[spp]['meanNRatioThresh'] = meanPropRatio
+#            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][minMask] # [min_index]  
 #            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][min_index]
 
 
@@ -490,8 +503,8 @@ class ProcessResults(object):
             relative_xmax = (self.ratioAtDIF[spp]['meanNRatioThresh'] - 
                 current_xlim[0]) / (current_xlim[1] - current_xlim[0])
 
-            if cc == 1:
-                relative_xmax = relative_xmax + .04
+#            if cc == 1:
+#                relative_xmax = relative_xmax  + .02
 
 
             print('current_xlim', current_xlim, 'relative xmax', relative_xmax[0])
@@ -507,7 +520,7 @@ class ProcessResults(object):
                 xmin = 0, color = 'r', linestyle = 'dashed')
 
             if cc == 1:
-                ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'] - current_xlim[0] - .1, ymin = 0,
+                ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'] - current_xlim[0] -0.2, ymin = 0,
                     ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
             else:
@@ -544,6 +557,8 @@ class ProcessResults(object):
                 verticalalignment='top', color='blue')
 
 
+
+        ## SECOND ROW
         for spp in self.allSpp:
             P.subplot(2,3, cc)
             ax3 = P.gca()
@@ -557,6 +572,10 @@ class ProcessResults(object):
             relative_xmax = (self.ratioAtDIF[spp]['trappedNRatioThresh'] - 
                 current_xlim[0]) / (current_xlim[1] - current_xlim[0])
 
+            if cc == 5:
+                relative_xmax = relative_xmax  - 0.02
+
+
             current_ylim = ax3.get_ylim()
             relative_ymax = (self.params.trRate5[spp] - 
                 current_ylim[0]) / (current_ylim[1] - current_ylim[0])
@@ -565,10 +584,13 @@ class ProcessResults(object):
                 xmax = relative_xmax,
                 xmin = 0, color = 'r', linestyle = 'dashed')
 
-            if cc < 6:
-                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+            if cc == 5:
+                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.02, ymin = 0,
                     ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
+            elif cc < 5:
+                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
 #            ax4 = ax3.twinx()
 #            ax4.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
