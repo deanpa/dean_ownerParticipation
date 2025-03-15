@@ -148,12 +148,12 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 
 class Params(object):
     def __init__(self):
-        self.model = 'Model2'
+        self.model = 'Model4'
         self.species = 'Stoats'
         prpK = 0.25
 ###        self.k = {'Rats' : 5.0 * prpK, 'Possums' : 8.0 * prpK, 'Stoats' : 2.2 * prpK}
-###        self.k = {'Rats' : 5.0 * , 'Possums' : 8.0, 'Stoats' : 2.2}
-        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.5}
+        self.k = {'Rats' : 8.0, 'Possums' : 9.0, 'Stoats' : 3.75}
+###        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.5}
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 

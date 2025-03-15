@@ -188,7 +188,7 @@ class ProcessResults(object):
             else:
                 # or handle the case when there is no True value
                 min_index = None  
-                self.wtAvePropRatio = 5000
+                self.wtAvePropRatio = np.max(self.propertyHR_Ratio[spp])
 
 
 
@@ -206,9 +206,9 @@ class ProcessResults(object):
 #            self.ratioAtDIF[spp]['meanNRatioThresh'] = self.propertyHR_Ratio[spp][min_index]
 
 
-            print(spp, 'meanNRatioThresh', self.ratioAtDIF[spp]['meanNRatioThresh'], 
-                'shp', self.ratioAtDIF[spp]['meanNRatioThresh'].shape,
-                'ratioIndex', self.propertyHR_Ratio[spp][min_index])
+#            print(spp, 'meanNRatioThresh', self.ratioAtDIF[spp]['meanNRatioThresh'], 
+#                'shp', self.ratioAtDIF[spp]['meanNRatioThresh'].shape,
+#                'ratioIndex', self.propertyHR_Ratio[spp][min_index])
 
             ####################################
             ## GET RATIO AT DIF FOR TRAPPED AREA
@@ -542,8 +542,10 @@ class ProcessResults(object):
 #                ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
 #                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
-            P.vlines(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
-                ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
+            if self.ratioAtDIF[spp]['meanNRatioThresh'] + 0.2 <= np.max(self.propertyHR_Ratio[spp]):
+
+                P.vlines(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
+                    ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
 
 
 ###            ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
@@ -594,8 +596,10 @@ class ProcessResults(object):
             relative_xmax = (self.ratioAtDIF[spp]['trappedNRatioThresh'] - 
                 current_xlim[0]) / (current_xlim[1] - current_xlim[0])
 
-            if cc == 5:
-                relative_xmax = relative_xmax  - 0.02
+#            if cc == 5:
+#                relative_xmax = relative_xmax  - 0.02
+            if cc == 4:
+                relative_xmax = relative_xmax  - 0.03
 
 
             current_ylim = ax3.get_ylim()
@@ -606,13 +610,23 @@ class ProcessResults(object):
                 xmax = relative_xmax,
                 xmin = 0, color = 'r', linestyle = 'dashed')
 
-            if cc == 5:
-                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.02, ymin = 0,
-                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+            if self.ratioAtDIF[spp]['trappedNRatioThresh'] + 0.2 <= np.max(self.propertyHR_Ratio[spp]):
+                if cc == 4:
+                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.5, ymin = 0,
+                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+                else:
+                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+        
+#            if cc == 5:
+#                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
-            elif cc < 5:
-                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
-                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+#            elif cc < 5:
+#                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+
 
 #            ax4 = ax3.twinx()
 #            ax4.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
@@ -635,7 +649,8 @@ class ProcessResults(object):
 #        fname = 'den_2Rows_TrapArea_Cost_AllSpp.png'
         pathFName = os.path.join(self.params.outputDataPath, fname)
         P.savefig(pathFName, format='png', dpi = 300)
-        P.show()
+#        P.show()
+        P.close()
 
 
 
