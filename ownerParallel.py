@@ -149,15 +149,14 @@ def loopYears(prop, nProperties, startDensity, areaHa, nStorage, nTrappingArea, 
 class Params(object):
     def __init__(self):
         self.model = 'Model4'
-        self.species = 'Rats'
-        prpK = 0.25
-###        self.k = {'Rats' : 5.0 * prpK, 'Possums' : 8.0 * prpK, 'Stoats' : 2.2 * prpK}
-        self.k = {'Rats' : 15.0, 'Possums' : 9.0, 'Stoats' : 3.75}
+        self.species = 'Stoats'
+        self.k = {'Rats' : 15.0, 'Possums' : 9.0, 'Stoats' : 3.5}
 ###        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.5}
+###        self.k = {'Rats' : 1.5, 'Possums' : 2.0, 'Stoats' : 0.75}
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}
 
-        self.startDensity = {'Rats' : 5, 'Possums' : 8, 'Stoats' : 0.025}
+#        self.startDensity = {'Rats' : 5, 'Possums' : 8, 'Stoats' : 0.025}
         self.propHrMultiplier = [.5, 4.0]    # 2.0]
         self.extentHRMultiplier = 10
         self.dispersalSD = {'Rats' : 300, 'Possums' : 500, 'Stoats' : 1000}
@@ -342,7 +341,12 @@ class Simulation(object):
         self.eradEventSum = np.zeros(self.nProperties)
         self.centralDensity = np.zeros((self.nProperties, self.params.nYears))
         self.nTrapsStorage = []     #np.zeros(self.nProperties)
-        self.pCapture = np.zeros(int(self.params.startDensity[self.params.species] * self.areaHa * 2))
+        if self.params.species == 'Stoats':
+            self.startDensity = self.params.k[self.params.species]  * 0.009
+        else:
+            self.startDensity = self.params.k[self.params.species] * 0.9
+
+        self.pCapture = np.zeros(int(self.startDensity * self.areaHa * 2))
 
     def plotCentralDensity(self):
         P.figure(figsize=(9,11))
@@ -390,7 +394,7 @@ class Simulation(object):
                 self.calcCost(prop)
 
             (X,Y) = loopYears(prop, self.nProperties, 
-                self.params.startDensity[self.params.species], self.areaHa, 
+                self.startDensity, self.areaHa, 
                 self.nStorage, self.nTrappingArea, self.extentSide, 
                 self.params.sigma[self.params.species], 
                 self.params.g0[self.params.species], self.params.nYears,

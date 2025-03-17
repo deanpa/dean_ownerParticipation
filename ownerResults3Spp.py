@@ -499,6 +499,138 @@ class ProcessResults(object):
         P.figure(figsize=(15, 10))
         cc = 1
         for spp in self.allSpp:
+            P.subplot(2, 3, cc)
+            ax1 = P.gca()
+            ax1.plot(self.propertyHR_Ratio[spp], self.meanN[spp], color='b', 
+                label='Density of ' + spp, linewidth=4)
+            ax1.fill_between(self.propertyHR_Ratio[spp], self.nQuants[spp][:, 0], 
+                self.nQuants[spp][:, 1], alpha=0.2, color='b')
+            ax1.set_xlabel('')
+            ax1.spines["right"].set_edgecolor("blue")
+            ax1.tick_params(axis='y', colors="blue")
+            ax1.yaxis.label.set_color("blue")
+
+            if cc == 1:
+                ax1.set_ylabel('Density over entire area ($km^{-2}$)', fontsize=14)
+            else:
+                ax1.set_ylabel('')
+
+            # Twin axis for costs
+            ax2 = ax1.twinx()
+            costRatio = self.costs[spp] / self.costs[spp][0]
+            ax2.plot(self.propertyHR_Ratio[spp], costRatio, color='k', linewidth=3)
+    
+            if cc == 3:
+                ax2.set_ylabel('Annual proportional cost increase', fontsize=14)
+            else:
+                ax2.set_ylabel('')
+
+            # Plot horizontal and vertical lines after main plots
+            ax1.hlines(y=self.params.trRate5[spp], xmin=0, 
+                   xmax=self.ratioAtDIF[spp]['meanNRatioThresh'],
+                   color='r', linestyle='dashed')
+
+            if self.ratioAtDIF[spp]['meanNRatioThresh'] + 0.2 <= np.max(self.propertyHR_Ratio[spp]):
+                ax1.vlines(x=self.ratioAtDIF[spp]['meanNRatioThresh'], ymin=0,
+                       ymax=self.params.trRate5[spp], color='r', linestyle='dashed')
+
+            ax1.text(0.05, 0.97, spp, transform=ax1.transAxes, fontsize=16, 
+                 verticalalignment='top', color='blue')
+
+            print(spp, 'horizontal self.params.trRate5[spp]', self.params.trRate5[spp],
+                  'ratioDIF', self.ratioAtDIF[spp]['meanNRatioThresh'])
+            print(spp, 'Base Cost: ', self.costs[spp][0], 'maxCost', np.max(self.costs[spp]))
+
+            cc += 1
+
+
+        ## SECOND ROW
+        for spp in self.allSpp:
+            P.subplot(2,3, cc)
+            ax3 = P.gca()
+            ax3.plot(self.propertyHR_Ratio[spp], self.meanNTrapArea[spp], color='b', 
+                label = spp, linewidth=4)
+            ax3.fill_between(self.propertyHR_Ratio[spp], self.quantsNTrapArea[spp][:,0], 
+                self.quantsNTrapArea[spp][:, 1], alpha = 0.2, color = 'b')
+
+            ax3.set_xlabel('Ratio of property area to HR area', fontsize = 14)
+            if cc == 4:
+                ax3.set_ylabel('Density in trapped area ($km^{-2}$)', fontsize = 14)
+            else:
+                ax3.set_ylabel('')
+            ax3.spines["right"].set_edgecolor("blue")
+            ax3.tick_params(axis='y', colors="blue")
+            ax3.yaxis.label.set_color("blue")
+
+
+           # Calculate relative x and y max
+            current_xlim = ax3.get_xlim()
+            relative_xmax = (self.ratioAtDIF[spp]['trappedNRatioThresh'] - 
+                current_xlim[0]) / (current_xlim[1] - current_xlim[0])
+
+            current_ylim = ax3.get_ylim()
+            relative_ymax = (self.params.trRate5[spp] - 
+                current_ylim[0]) / (current_ylim[1] - current_ylim[0])
+
+#            ax3.axhline(y = self.params.trRate5[spp], 
+            if cc == 1:
+                P.hlines(y = self.params.trRate5[spp], 
+                    xmax = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.35,
+                    xmin = 0, color = 'r', linestyle = 'dashed')
+            else:
+                P.hlines(y = self.params.trRate5[spp], 
+                    xmax = self.ratioAtDIF[spp]['trappedNRatioThresh'],
+                    xmin = 0, color = 'r', linestyle = 'dashed')
+
+            if self.ratioAtDIF[spp]['trappedNRatioThresh'] + 0.2 <= np.max(self.propertyHR_Ratio[spp]):
+#                if cc == 4:
+#                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.5, ymin = 0,
+#                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+#                else:
+#                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+        
+                if cc == 1:
+                   P.vlines(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - .35, ymin = 0,
+                        ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
+                else:
+                    P.vlines(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+                        ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
+
+#                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+        
+#            if cc == 5:
+#                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+#            elif cc < 5:
+#                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+
+#            ax4 = ax3.twinx()
+#            ax4.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
+#            ax3.legend(loc = 'upper right')
+#            if cc == 3:
+#                ax4.set_ylabel('Annual trapping costs ($ \\$ ha^{-1}$)', fontsize = 14)
+#            else:
+#                ax4.set_ylabel('')
+            cc += 1
+        P.tight_layout()
+        fname = 'den_2Rows_TrapArea_PrpCost_AllSpp3.png'
+#        fname = 'den_2Rows_TrapArea_Cost_AllSpp.png'
+        pathFName = os.path.join(self.params.outputDataPath, fname)
+        P.savefig(pathFName, format='png', dpi = 300)
+#        P.show()
+        P.close()
+
+
+
+    def plot2RowsDensityCostXXX(self):
+        ## PLOT PROPERTY AREA TO HR AREA RATIO
+        P.figure(figsize=(15, 10))
+        cc = 1
+        for spp in self.allSpp:
             P.subplot(2,3, cc)
             ax1 = P.gca()
             ax1.plot(self.propertyHR_Ratio[spp], self.meanN[spp], color='b', 
@@ -548,9 +680,15 @@ class ProcessResults(object):
                     ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
 
 
+                ax1.vlines(x=self.ratioAtDIF[spp]['meanNRatioThresh'], ymin=0,
+                       ymax=self.params.trRate5[spp], color='r', linestyle='dashed')
+
+
+
+
+
 ###            ax1.axvline(x = self.ratioAtDIF[spp]['meanNRatioThresh'], ymin = 0,
 ###                ymax = relative_ymax, color = 'r', linestyle = 'dashed')
-
 
             baseCost = self.costs[spp][0]
             print(spp, 'Base Cost: ', baseCost, 'maxCost', np.max(self.costs[spp]))
@@ -573,6 +711,9 @@ class ProcessResults(object):
                 ax2.set_ylabel('Annual proportional cost increase', fontsize = 14)
             else:
                 ax2.set_ylabel('')
+
+
+
             cc += 1
 
 
@@ -591,32 +732,52 @@ class ProcessResults(object):
             ax3.fill_between(self.propertyHR_Ratio[spp], self.quantsNTrapArea[spp][:,0], 
                 self.quantsNTrapArea[spp][:, 1], alpha = 0.2, color = 'b')
 
+            ax3.set_xlabel('Ratio of property area to HR area', fontsize = 14)
+            if cc == 4:
+                ax3.set_ylabel('Density in trapped area ($km^{-2}$)', fontsize = 14)
+            else:
+                ax3.set_ylabel('')
+            ax3.spines["right"].set_edgecolor("blue")
+            ax3.tick_params(axis='y', colors="blue")
+            ax3.yaxis.label.set_color("blue")
+
+
            # Calculate relative x and y max
             current_xlim = ax3.get_xlim()
             relative_xmax = (self.ratioAtDIF[spp]['trappedNRatioThresh'] - 
                 current_xlim[0]) / (current_xlim[1] - current_xlim[0])
 
-#            if cc == 5:
-#                relative_xmax = relative_xmax  - 0.02
-            if cc == 4:
-                relative_xmax = relative_xmax  - 0.03
-
-
             current_ylim = ax3.get_ylim()
             relative_ymax = (self.params.trRate5[spp] - 
                 current_ylim[0]) / (current_ylim[1] - current_ylim[0])
 
-            ax3.axhline(y = self.params.trRate5[spp], 
-                xmax = relative_xmax,
-                xmin = 0, color = 'r', linestyle = 'dashed')
+#            ax3.axhline(y = self.params.trRate5[spp], 
+            if cc == 1:
+                P.hlines(y = self.params.trRate5[spp], 
+                    xmax = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.35,
+                    xmin = 0, color = 'r', linestyle = 'dashed')
+            else:
+                P.hlines(y = self.params.trRate5[spp], 
+                    xmax = self.ratioAtDIF[spp]['trappedNRatioThresh'],
+                    xmin = 0, color = 'r', linestyle = 'dashed')
 
             if self.ratioAtDIF[spp]['trappedNRatioThresh'] + 0.2 <= np.max(self.propertyHR_Ratio[spp]):
-                if cc == 4:
-                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.5, ymin = 0,
-                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+#                if cc == 4:
+#                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - 0.5, ymin = 0,
+#                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+#                else:
+#                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+        
+                if cc == 1:
+                   P.vlines(x = self.ratioAtDIF[spp]['trappedNRatioThresh'] - .35, ymin = 0,
+                        ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
                 else:
-                    ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
-                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
+                    P.vlines(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+                        ymax = self.params.trRate5[spp], color = 'r', linestyle = 'dashed')
+
+#                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
+#                        ymax = relative_ymax, color = 'r', linestyle = 'dashed')
         
 #            if cc == 5:
 #                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
@@ -626,18 +787,8 @@ class ProcessResults(object):
 #                ax3.axvline(x = self.ratioAtDIF[spp]['trappedNRatioThresh'], ymin = 0,
 #                    ymax = relative_ymax, color = 'r', linestyle = 'dashed')
 
-
-
 #            ax4 = ax3.twinx()
 #            ax4.plot(self.propertyHR_Ratio[spp], self.costs[spp], color='k', linewidth=3)
-            ax3.set_xlabel('Ratio of property area to HR area', fontsize = 14)
-            if cc == 4:
-                ax3.set_ylabel('Density in trapped area ($km^{-2}$)', fontsize = 14)
-            else:
-                ax3.set_ylabel('')
-            ax3.spines["right"].set_edgecolor("blue")
-            ax3.tick_params(axis='y', colors="blue")
-            ax3.yaxis.label.set_color("blue")
 #            ax3.legend(loc = 'upper right')
 #            if cc == 3:
 #                ax4.set_ylabel('Annual trapping costs ($ \\$ ha^{-1}$)', fontsize = 14)
