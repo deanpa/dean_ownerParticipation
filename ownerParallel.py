@@ -150,8 +150,11 @@ class Params(object):
     def __init__(self):
         self.model = 'Model4'
         self.species = 'Stoats'
+        ## PODOCARP - HIGH K
         self.k = {'Rats' : 15.0, 'Possums' : 9.0, 'Stoats' : 3.5}
+        ## BEECH - MID K
 ###        self.k = {'Rats' : 5.0, 'Possums' : 8.0, 'Stoats' : 2.5}
+        ## GRASSLAND - LOW K
 ###        self.k = {'Rats' : 1.5, 'Possums' : 2.0, 'Stoats' : 0.75}
         self.sigma = {'Rats' : 40, 'Possums' : 80, 'Stoats' : 300}
         self.g0 = {'Rats' : .05, 'Possums' : 0.1, 'Stoats' : 0.02}

@@ -184,7 +184,7 @@ class Params(object):
         self.nRecheckPerYear = {'Rats' : 3.0, 'Possums' : 6.0, 'Stoats' : 3.0}
         self.trapNightsPerSet = {'Rats' : 10.0, 'Possums' : 1.0, 'Stoats' : 9.0}
 
-        self.iter = 10
+        self.iter = 1
         self.nYears = 4
         self.pTrapFail = 0.02
         self.pNeoPhobic = 0.03
